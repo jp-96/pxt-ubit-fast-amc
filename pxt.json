@@ -1,6 +1,6 @@
 {
     "name": "pxt-ubit-extension",
-    "version": "0.1.0-alpha",
+    "version": "0.0.1",
     "description": "(description: this description is written in pxt.json)",
     "dependencies": {
         "core": "*"
@@ -12,7 +12,15 @@
         "src/custom.ts",
         "src/custom.cpp",
         "src/customlib.h",
-        "src/customlib.cpp"
+        "src/customlib.cpp",
+        "src/lib/EulerAngles.h",
+        "src/lib/EulerAngles.cpp",
+        "src/lib/FastMath.h",
+        "src/lib/FastMath.cpp",
+        "src/lib/Quaternion.h",
+        "src/lib/Quaternion.cpp",
+        "src/lib/FAMC.h",
+        "src/lib/FAMC.cpp"
     ],
     "testFiles": [
         "test/test.ts"
