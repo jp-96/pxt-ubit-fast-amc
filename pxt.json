@@ -10,17 +10,7 @@
         "enums.d.ts",
         "shims.d.ts",
         "src/custom.ts",
-        "src/custom.cpp",
-        "src/customlib.h",
-        "src/customlib.cpp",
-        "src/lib/EulerAngles.h",
-        "src/lib/EulerAngles.cpp",
-        "src/lib/FastMath.h",
-        "src/lib/FastMath.cpp",
-        "src/lib/Quaternion.h",
-        "src/lib/Quaternion.cpp",
-        "src/lib/FAMC.h",
-        "src/lib/FAMC.cpp"
+        "src/custom.cpp"
     ],
     "testFiles": [
         "test/test.ts"
