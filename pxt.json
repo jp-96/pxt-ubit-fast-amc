@@ -9,6 +9,7 @@
         "README.md",
         "enums.d.ts",
         "shims.d.ts",
+        "src/famc_.ts",
         "src/custom.ts",
         "src/custom.cpp"
     ],
