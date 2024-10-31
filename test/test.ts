@@ -30,17 +30,18 @@ basic.forever(function () {
     //     [input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y)]
     // )
 
+    serial.writeString("quaternion:")
     serial.writeNumbers(custom.quaternion())
     
-    // serial.writeValue("azi", custom.getAzimuthRadians())
-    // serial.writeValue("yaw", custom.getYawRadians())
-    // serial.writeValue("pit", custom.getPitchRadians())
-    // serial.writeValue("rol", custom.getRollRadians())
+    serial.writeValue("AZMT(rad)", custom.getAzimuthRadians())
+    serial.writeValue("HEAD(rad)", custom.getHeadingRadians())
+    serial.writeValue("PTCH(rad)", custom.getPitchRadians())
+    serial.writeValue("BANK(rad)", custom.getBankRadians())
     
-    serial.writeValue("azi", custom.getAzimuth())
-    serial.writeValue("yaw", custom.getYaw())
-    serial.writeValue("pit", custom.getPitch())
-    serial.writeValue("rol", custom.getRoll())
+    serial.writeValue("AZMT(deg)", custom.getAzimuth())
+    serial.writeValue("HEAD(deg)", custom.getHeading())
+    serial.writeValue("PITC(deg)", custom.getPitch())
+    serial.writeValue("BANK(deg)", custom.getBank())
 
     basic.pause(100)
 })

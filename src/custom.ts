@@ -8,44 +8,40 @@
 namespace custom {
     const PI2 = 2 * Math.PI;
 
-    // Quaternion
-    let qw = 1.0;
-    let qx = 0.0;
-    let qy = 0.0;
-    let qz = 0.0;
+    // Quaternion [w, x, y, z]
+    let quaternion_ = [1.0, 0.0, 0.0, 0.0];
     let quaternionTimestamp = 0;
 
     //% block
     export function estimate(acceleration: number[], magneticForce: number[]): number[] {
-        if (3 == acceleration.length) {
+        if ((3 == acceleration.length) && (3 == magneticForce.length)) {
             famc_.setAcceleration(acceleration[0], acceleration[1], acceleration[2]);
-        }
-        if (3 == magneticForce.length) {
             famc_.setMagneticForce(magneticForce[0], magneticForce[1], magneticForce[2]);
         }
         famc_.estimate();
-        qw = famc_.getW();
-        qx = famc_.getX();
-        qy = famc_.getY();
-        qz = famc_.getZ();
+        const q = [famc_.getW(), famc_.getX(), famc_.getY(), famc_.getZ()];
+        quaternion_ = q;
         quaternionTimestamp++;
-        return quaternion();
+        return q
     }
 
     //% block
     export function quaternion(): number[] {
-        return [qw, qx, qy, qz];
+        return quaternion_;
     }
 
-    // Euler angle
-    let heading = 0.0;
-    let pitch = 0.0;
-    let bank = 0.0;
-    let azimuth = 0.0;
+    // Euler angle [heading, pitch, bank]
+    let euler_ = [0.0, 0.0, 0.0]
     let eulerTimestamp = 0;
 
-    function convToEuler(w: number, x: number, y: number, z: number): number[] {
+    function convToEuler(q: number[]): number[] {
         // Right-Handed Coordinate System
+        if (4 != q.length) return [];
+        const w = q[0];
+        const x = q[1];
+        const y = q[2];
+        const z = q[3];
+
         const ysqr = y * y;
         const t0 = 2.0 * (w * x + y * z);
         const t1 = 1.0 - 2.0 * (x * x + ysqr);
@@ -69,24 +65,19 @@ namespace custom {
         }
         eulerTimestamp = quaternionTimestamp;
 
-        // convert from Quaternion to Euler angle
-        const euler = convToEuler(qw, qx, qy, qz);
-
-        // setup Euler angle and Azimuth
-        heading = euler[0];
-        pitch = euler[1];
-        bank = euler[2];
-        if (heading > 0) {
-            azimuth = PI2 - heading;
-        } else {
-            azimuth = -heading;
-        }
+        // Setup Euler angle
+        euler_ = convToEuler(quaternion());
     }
 
     //% block
     export function getAzimuthRadians(): number {
         updateEulerAngle();
-        return azimuth;
+        const heading = getHeadingRadians();
+        if (heading > 0) {
+            return PI2 - heading;
+        } else {
+            return -1.0 * heading;
+        }
     }
 
     //% block
@@ -95,20 +86,20 @@ namespace custom {
     }
 
     //% block
-    export function getYawRadians(): number {
+    export function getHeadingRadians(): number {
         updateEulerAngle();
-        return heading;
+        return euler_[0];
     }
 
     //% block
-    export function getYaw(): number {
-        return Math.round(getYawRadians() * 180 / Math.PI);
+    export function getHeading(): number {
+        return Math.round(getHeadingRadians() * 180 / Math.PI);
     }
 
     //% block
     export function getPitchRadians(): number {
         updateEulerAngle();
-        return pitch;
+        return euler_[1];
     }
 
     //% block
@@ -117,14 +108,14 @@ namespace custom {
     }
 
     //% block
-    export function getRollRadians(): number {
+    export function getBankRadians(): number {
         updateEulerAngle();
-        return bank;
+        return euler_[2];
     }
 
     //% block
-    export function getRoll(): number {
-        return Math.round(getRollRadians() * 180 / Math.PI);
+    export function getBank(): number {
+        return Math.round(getBankRadians() * 180 / Math.PI);
     }
 
 }
