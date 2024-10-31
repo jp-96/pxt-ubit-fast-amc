@@ -9,8 +9,9 @@
         "README.md",
         "enums.d.ts",
         "shims.d.ts",
-        "src/custom.ts",
-        "src/custom.cpp"
+        "src/famc_.ts",
+        "src/famc_.cpp",
+        "src/custom.ts"
     ],
     "testFiles": [
         "test/test.ts"
