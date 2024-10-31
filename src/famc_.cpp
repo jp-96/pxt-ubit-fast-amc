@@ -1,49 +1,22 @@
 #include "pxt.h"
 
-namespace custom
+namespace famc_
 {
-    int estimated = 0;
+    // Accelerration (normalized)
+    double ax = 0.0;
+    double ay = 0.0;
+    double az = 1.0;
 
-    //%
-    int getTimestamp()
-    {
-        return estimated;
-    }
+    // Magnetic force (normalized)
+    double mx = 0.0;
+    double my = 0.0;
+    double mz = 1.0;
 
     // Quaternion (normalized)
     double qw = 1.0;
     double qx = 2.0;
     double qy = 3.0;
     double qz = 4.0;
-
-    //%
-    TNumber getW()
-    {
-        return fromDouble(qw);
-    }
-
-    //%
-    TNumber getX()
-    {
-        return fromDouble(qx);
-    }
-
-    //%
-    TNumber getY()
-    {
-        return fromDouble(qy);
-    }
-
-    //%
-    TNumber getZ()
-    {
-        return fromDouble(qz);
-    }
-
-    // Accelerration (normalized)
-    double ax = 0.0;
-    double ay = 0.0;
-    double az = 1.0;
 
     //%
     void setAcceleration(TNumber x, TNumber y, TNumber z)
@@ -65,11 +38,6 @@ namespace custom
             az = 1.0;
         }
     }
-
-    // Magnetic force (normalized)
-    double mx = 0.0;
-    double my = 0.0;
-    double mz = 1.0;
 
     //%
     void setMagneticForce(TNumber x, TNumber y, TNumber z)
@@ -94,7 +62,7 @@ namespace custom
     }
 
     //%
-    void estimateFamc()
+    void estimate()
     {
         // ---------------------------------------------------------------------------------------------
         // A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer
@@ -157,8 +125,30 @@ namespace custom
         qy /= norm;
         qz /= norm;
 
-        // estimated
-        ++estimated;
+    }
+
+    //%
+    TNumber getW()
+    {
+        return fromDouble(qw);
+    }
+
+    //%
+    TNumber getX()
+    {
+        return fromDouble(qx);
+    }
+
+    //%
+    TNumber getY()
+    {
+        return fromDouble(qy);
+    }
+
+    //%
+    TNumber getZ()
+    {
+        return fromDouble(qz);
     }
 
 }

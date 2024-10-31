@@ -16,34 +16,27 @@ namespace famc_ {
     let qy = 0.0;
     let qz = 0.0;
 
-    let estimated = 0;
-
-    //% shim=custom::getTimestamp
-    export function getTimestamp(): number {
-        return estimated;
-    }
-
-    //% shim=custom::getW
+    //% shim=famc_::getW
     export function getW(): number {
         return qw;
     }
 
-    //% shim=custom::getX
+    //% shim=famc_::getX
     export function getX(): number {
         return qx;
     }
 
-    //% shim=custom::getY
+    //% shim=famc_::getY
     export function getY(): number {
         return qy;
     }
 
-    //% shim=custom::getZ
+    //% shim=famc_::getZ
     export function getZ(): number {
         return qz;
     }
 
-    //% shim=custom::setAcceleration
+    //% shim=famc_::setAcceleration
     export function setAcceleration(x: number, y: number, z: number): void {
         const norm = Math.sqrt(x * x + y * y + z * z)
         if (norm > 0) {
@@ -57,7 +50,7 @@ namespace famc_ {
         }
     }
 
-    //% shim=custom::setMagneticForce
+    //% shim=famc_::setMagneticForce
     export function setMagneticForce(x: number, y: number, z: number): void {
         const norm = Math.sqrt(x * x + y * y + z * z)
         if (norm > 0) {
@@ -71,18 +64,18 @@ namespace famc_ {
         }
     }
 
-    function estimateSimu(): void {
+    function simuEstimate(): void {
+        // Accelerration Only for simulator
         qw = Math.sqrt((az + 1.0) / 2.0)
         qx = -ay / (2.0 * qw)
         qy = ax / (2.0 * qw)
         qz = 0.0
-        ++estimated;
     }
 
-    //% shim=custom::estimateFamc
-    export function estimateFamc(): void {
+    //% shim=famc_::estimate
+    export function estimate(): void {
         // for simulator
-        estimateSimu();
+        simuEstimate();
     }
     
 }

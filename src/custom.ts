@@ -6,65 +6,86 @@
 //% block="Custom Blocks"
 //% weight=100 color=#696969 icon="\uf1b2"
 namespace custom {
+    const PI2 = 2 * Math.PI;
+
+    // Quaternion
+    let qw = 1.0;
+    let qx = 0.0;
+    let qy = 0.0;
+    let qz = 0.0;
+    let quaternionTimestamp = 0;
+
+    //% block
+    export function estimate(acceleration: number[], magneticForce: number[]): number[] {
+        if (3 == acceleration.length) {
+            famc_.setAcceleration(acceleration[0], acceleration[1], acceleration[2]);
+        }
+        if (3 == magneticForce.length) {
+            famc_.setMagneticForce(magneticForce[0], magneticForce[1], magneticForce[2]);
+        }
+        famc_.estimate();
+        qw = famc_.getW();
+        qx = famc_.getX();
+        qy = famc_.getY();
+        qz = famc_.getZ();
+        quaternionTimestamp++;
+        return quaternion();
+    }
 
     //% block
     export function quaternion(): number[] {
-        return [
-            famc_.getW(),
-            famc_.getX(),
-            famc_.getY(),
-            famc_.getZ(),
-        ];
+        return [qw, qx, qy, qz];
     }
 
     // Euler angle
-    let eulerTimestamp = 0;
-    let yaw = 0.0;
+    let heading = 0.0;
     let pitch = 0.0;
-    let roll = 0.0;
+    let bank = 0.0;
     let azimuth = 0.0;
-    const PI2 = 2 * Math.PI;
+    let eulerTimestamp = 0;
 
-    function updateToEuler(): void {
-        // Whether recalculation is needed
-        const timestamp = famc_.getTimestamp();
-        if (timestamp == eulerTimestamp) {
-            return;
-        }
-        eulerTimestamp = timestamp;
-
-        // Quaternion
-        const w = famc_.getW();
-        const x = famc_.getX();
-        const y = famc_.getY();
-        const z = famc_.getZ();
-
+    function convToEuler(w: number, x: number, y: number, z: number): number[] {
         // Right-Handed Coordinate System
         const ysqr = y * y;
         const t0 = 2.0 * (w * x + y * z);
         const t1 = 1.0 - 2.0 * (x * x + ysqr);
-        roll = Math.atan2(t0, t1);
+        const roll = Math.atan2(t0, t1);
 
         let t2 = 2.0 * (w * y - z * x);
         t2 = t2 > 1.0 ? 1.0 : (t2 < -1.0 ? -1.0 : t2);
-        pitch = Math.asin(t2);
+        const pitch = Math.asin(t2);
 
         const t3 = 2.0 * (w * z + x * y);
         const t4 = 1.0 - 2.0 * (ysqr + z * z);
-        yaw = Math.atan2(t3, t4);
+        const yaw = Math.atan2(t3, t4);
 
-        // Azimuth
-        if (yaw > 0) {
-            azimuth = PI2 - yaw;
-        } else {
-            azimuth = -yaw;
+        return [yaw, pitch, roll];
+    }
+
+    function updateEulerAngle(): void {
+        // Whether recalculation is needed
+        if (quaternionTimestamp == eulerTimestamp) {
+            return;
         }
+        eulerTimestamp = quaternionTimestamp;
 
+        // convert from Quaternion to Euler angle
+        const euler = convToEuler(qw, qx, qy, qz);
+
+        // setup Euler angle and Azimuth
+        heading = euler[0];
+        pitch = euler[1];
+        bank = euler[2];
+        if (heading > 0) {
+            azimuth = PI2 - heading;
+        } else {
+            azimuth = -heading;
+        }
     }
 
     //% block
     export function getAzimuthRadians(): number {
-        updateToEuler();
+        updateEulerAngle();
         return azimuth;
     }
 
@@ -75,8 +96,8 @@ namespace custom {
 
     //% block
     export function getYawRadians(): number {
-        updateToEuler();
-        return yaw;
+        updateEulerAngle();
+        return heading;
     }
 
     //% block
@@ -86,7 +107,7 @@ namespace custom {
 
     //% block
     export function getPitchRadians(): number {
-        updateToEuler();
+        updateEulerAngle();
         return pitch;
     }
 
@@ -97,8 +118,8 @@ namespace custom {
 
     //% block
     export function getRollRadians(): number {
-        updateToEuler();
-        return roll;
+        updateEulerAngle();
+        return bank;
     }
 
     //% block
@@ -106,11 +127,4 @@ namespace custom {
         return Math.round(getRollRadians() * 180 / Math.PI);
     }
 
-    //% block
-    export function estimate(acceleration: number[], magneticForce: number[]) {
-        famc_.setAcceleration(acceleration[0], acceleration[1], acceleration[2]);
-        famc_.setMagneticForce(magneticForce[0], magneticForce[1], magneticForce[2]);
-        famc_.estimateFamc();
-    }
-    
 }
