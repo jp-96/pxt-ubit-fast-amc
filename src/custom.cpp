@@ -4,17 +4,12 @@ namespace custom
 {
     int estimated = 0;
 
-    void updateTimestamp()
-    {
-        estimated++;
-    }
-
     //%
     int getTimestamp()
     {
         return estimated;
     }
- 
+
     // Quaternion (normalized)
     double qw = 1.0;
     double qx = 2.0;
@@ -62,7 +57,9 @@ namespace custom
             ax /= norm;
             ay /= norm;
             az /= norm;
-        } else {
+        }
+        else
+        {
             ax = 0.0;
             ay = 0.0;
             az = 1.0;
@@ -86,7 +83,9 @@ namespace custom
             mx /= norm;
             my /= norm;
             mz /= norm;
-        } else {
+        }
+        else
+        {
             // default
             mx = 0.0;
             my = 0.0;
@@ -95,14 +94,14 @@ namespace custom
     }
 
     //%
-    void estimate()
+    void estimateFamc()
     {
         // ---------------------------------------------------------------------------------------------
         // A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer
         // Fast Accelerometer-Magnetometer Combination (FAMC) algorithm by Zhuohua Liu and Jin Wu
         // ---------------------------------------------------------------------------------------------
         // https://github.com/zarathustr/Analytic-AMC/blob/master/FAMC.m
-        
+
         // Dynamic magnetometer reference vector
         double m_D = ax * mx + ay * my + az * mz;
         double m_N = sqrt(1.0 - m_D * m_D);
@@ -136,18 +135,21 @@ namespace custom
         double A33 = 1.0 / p3;
 
         // Quaternion Elements
-        double a = B23 * (A11 + A12 * (A21 + A23 * A31) + A13 * A31)
-                 - (B13 - B31) * (A21 + A23 * A31) - A31 * B21;
-        double b = B23 * (A12 * (A22 + A23 * A32) + A13 * A32)
-                 - (B13 - B31) * (A22 + A23 * A32) - A32 * B21;
-        double c = B23 * (A13 * A33 + A12 * A23 * A33)
-                 - A33 * B21 - A23 * A33 * (B13 - B31);
+        double a1 = B23 * (A11 + A12 * (A21 + A23 * A31) + A13 * A31);
+        double a2 = (B13 - B31) * (A21 + A23 * A31);
+        double a3 = A31 * B21;
+        double b1 = B23 * (A12 * (A22 + A23 * A32) + A13 * A32);
+        double b2 = (B13 - B31) * (A22 + A23 * A32);
+        double b3 = A32 * B21;
+        double c1 = B23 * (A13 * A33 + A12 * A23 * A33);
+        double c2 = A33 * B21;
+        double c3 = A23 * A33 * (B13 - B31);
 
         // Quaternion
-        qw = 1.0;
-        qx = -a;
-        qy = -b;
-        qz = -c;
+        qw = -1.0;
+        qx = a1 - a2 - a3;
+        qy = b1 - b2 - b3;
+        qz = c1 - c2 - c3;
 
         double norm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz);
         qw /= norm;
@@ -156,13 +158,7 @@ namespace custom
         qz /= norm;
 
         // estimated
-        updateTimestamp();
-    }
-
-    //%
-    void buildErr6(TNumber p1, TNumber p2, TNumber p3, TNumber p4, TNumber p5, TNumber p6)
-    {
-        double v = toDouble(p1);
+        ++estimated;
     }
 
 }
