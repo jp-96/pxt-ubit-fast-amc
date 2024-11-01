@@ -9,35 +9,39 @@ namespace famc_ {
     let mx = 1.0;
     let my = 0.0;
     let mz = 0.0;
-    
+
     // Quaternion for simulator
-    let qw = 1.0;
-    let qx = 0.0;
-    let qy = 0.0;
-    let qz = 0.0;
+    let q_ = Quaternion.kQuaternionIdentity;
 
     //% shim=famc_::getW
     export function getW(): number {
-        return qw;
+        return q_[0];
     }
 
     //% shim=famc_::getX
     export function getX(): number {
-        return qx;
+        return q_[1];
     }
 
     //% shim=famc_::getY
     export function getY(): number {
-        return qy;
+        return q_[2];
     }
 
     //% shim=famc_::getZ
     export function getZ(): number {
-        return qz;
+        return q_[3];
     }
 
-    //% shim=famc_::setAcceleration
-    export function setAcceleration(x: number, y: number, z: number): void {
+    let alpha_ = 1.0;
+
+    //% shim=famc_::setLowPassFilterAlpha
+    export function setLowPassFilterAlpha(alpha: number): void {
+        alpha_ = alpha;
+    }
+
+    //% shim=famc_::updateAcceleration
+    export function updateAcceleration(x: number, y: number, z: number): void {
         const norm = Math.sqrt(x * x + y * y + z * z)
         if (norm > 0) {
             ax = x / norm;
@@ -50,8 +54,8 @@ namespace famc_ {
         }
     }
 
-    //% shim=famc_::setMagneticForce
-    export function setMagneticForce(x: number, y: number, z: number): void {
+    //% shim=famc_::updateMagneticForce
+    export function updateMagneticForce(x: number, y: number, z: number): void {
         const norm = Math.sqrt(x * x + y * y + z * z)
         if (norm > 0) {
             mx = x / norm;
@@ -66,10 +70,11 @@ namespace famc_ {
 
     function simuEstimate(): void {
         // Accelerration Only for simulator
-        qw = Math.sqrt((az + 1.0) / 2.0)
-        qx = -ay / (2.0 * qw)
-        qy = ax / (2.0 * qw)
-        qz = 0.0
+        const qw = Math.sqrt((az + 1.0) / 2.0)
+        const qx = ay / (2.0 * qw)
+        const qy = -ax / (2.0 * qw)
+        const qz = 0.0
+        q_ = Quaternion.normalize([qw, qx, qy, qz]);
     }
 
     //% shim=famc_::estimate
@@ -77,5 +82,5 @@ namespace famc_ {
         // for simulator
         simuEstimate();
     }
-    
+
 }

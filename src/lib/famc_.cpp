@@ -1,7 +1,30 @@
 #include "pxt.h"
+#include "LowPassFilter.h"
 
 namespace famc_
 {
+    // Accelerration filter
+    LowPassFilter filterAx;
+    LowPassFilter filterAy;
+    LowPassFilter filterAz;
+
+    // Magnetic force filter
+    LowPassFilter filterMx;
+    LowPassFilter filterMy;
+    LowPassFilter filterMz;
+
+    //%
+    void setLowPassFilterAlpha(TNumber alpha)
+    {
+        const double newAlpha = toDouble(alpha);
+        filterAx.setAlpha(newAlpha);
+        filterAy.setAlpha(newAlpha);
+        filterAz.setAlpha(newAlpha);
+        filterMx.setAlpha(newAlpha);
+        filterMy.setAlpha(newAlpha);
+        filterMz.setAlpha(newAlpha);
+    }
+
     // Accelerration (normalized)
     double ax = 0.0;
     double ay = 0.0;
@@ -14,16 +37,16 @@ namespace famc_
 
     // Quaternion (normalized)
     double qw = 1.0;
-    double qx = 2.0;
-    double qy = 3.0;
-    double qz = 4.0;
+    double qx = 0.0;
+    double qy = 0.0;
+    double qz = 0.0;
 
     //%
-    void setAcceleration(TNumber x, TNumber y, TNumber z)
+    void updateAcceleration(TNumber x, TNumber y, TNumber z)
     {
-        ax = toDouble(x);
-        ay = toDouble(y);
-        az = toDouble(z);
+        ax = filterAx.filter(toDouble(x));
+        ay = filterAy.filter(toDouble(y));
+        az = filterAz.filter(toDouble(z));
         double norm = sqrt(ax * ax + ay * ay + az * az);
         if (norm > 0)
         {
@@ -40,11 +63,11 @@ namespace famc_
     }
 
     //%
-    void setMagneticForce(TNumber x, TNumber y, TNumber z)
+    void updateMagneticForce(TNumber x, TNumber y, TNumber z)
     {
-        mx = toDouble(x);
-        my = toDouble(y);
-        mz = toDouble(z);
+        mx = filterMx.filter(toDouble(x));
+        my = filterMy.filter(toDouble(y));
+        mz = filterMz.filter(toDouble(z));
         double norm = sqrt(mx * mx + my * my + mz * mz);
         if (norm > 0)
         {
@@ -124,7 +147,6 @@ namespace famc_
         qx /= norm;
         qy /= norm;
         qz /= norm;
-
     }
 
     //%
