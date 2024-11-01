@@ -1,11 +1,12 @@
 /**
- * A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer on micro:bit.
+ * A Simplified Analytic Attitude Determination Algorithm
+ * Using Accelerometer and Magnetometer on micro:bit.
+ * 
  */
 //% block="Accel Magic"
 //% weight=100 color=#696969 icon="\uf1b2"
 namespace accelmagic {
 
-    // initialize
     const DEFAULT_ALPHA = 0.8;
     setLowPassFilterAlpha(DEFAULT_ALPHA);
 
