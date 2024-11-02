@@ -50,7 +50,7 @@ basic.forever(function () {
 basic.forever(function () {
 
     // estimate
-    quat = accelmagic.estimate()
+    quat = accelmagic.quatFrom(accelmagic.estimate())
 
     // logging - Quaternion
     serial.writeString("Q:")
@@ -62,12 +62,12 @@ basic.forever(function () {
     //quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
-    rpy = accelmagic.quatToRpy(quat)
+    rpy = accelmagic.rpyFromQuat(quat)
 
-    serial.writeValue("A", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Azimuth)))
-    serial.writeValue("Y", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Yaw)))
-    serial.writeValue("P", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Pitch)))
-    serial.writeValue("R", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Roll)))
+    serial.writeValue("A", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Azimuth)))
+    serial.writeValue("Y", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Yaw)))
+    serial.writeValue("P", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Pitch)))
+    serial.writeValue("R", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Roll)))
 
     basic.pause(200)
 })

@@ -14,12 +14,20 @@ enum AngleRPY {
 //% weight=100 color=#696969 icon="\uf1b2"
 //% groups="['Quaternion', 'EulerAngles', 'Sensor']"
 namespace accelmagic {
-    
+
     //% block
     //% group="Quaternion"
     //% weight=270
     export function quat(w: number, x: number, y: number, z: number): Quaternion {
-        return (new Quaternion(w, x, y, z)).normalize();
+        return new Quaternion(w, x, y, z)
+    }
+
+    //% block
+    //% group="Quaternion"
+    //% weight=210
+    //% advanced=true
+    export function quatFrom(q: number[]): Quaternion {
+        return Quaternion.fromArray(q);
     }
 
     //% block
@@ -53,7 +61,7 @@ namespace accelmagic {
     //% block
     //% group="Quaternion"
     //% weight=220
-    export function rpyToQuat(rpy: EulerAngles): Quaternion {
+    export function quatFromRpy(rpy: EulerAngles): Quaternion {
         return Quaternion.fromEulerAngles(rpy);
     }
 
@@ -69,9 +77,15 @@ namespace accelmagic {
     //% group="EulerAngles"
     //% weight=200
     export function rpy(roll: number, pitch: number, yaw: number): EulerAngles {
-        return (new EulerAngles(roll, pitch, yaw));
+        return new EulerAngles(roll, pitch, yaw);
     }
 
+    //% block
+    //% group="EulerAngles"
+    //% weight=180
+    export function rpyFrom(rpy: number[]): EulerAngles {
+        return EulerAngles.fromArray(rpy);
+    }
     //% block
     //% group="EulerAngles"
     //% weight=190
@@ -93,9 +107,10 @@ namespace accelmagic {
     //% block
     //% group="EulerAngles"
     //% weight=180
-    export function quatToRpy(q: Quaternion): EulerAngles {
+    export function rpyFromQuat(q: Quaternion): EulerAngles {
         return EulerAngles.fromQuaternion(q);
     }
+
     //% block
     //% group="EulerAngles"
     //% weight=170
@@ -138,7 +153,7 @@ namespace accelmagic {
         /**
          * build from array.
          * @param q [w, x, y, z]
-         * @returns instance of Quaternion
+         * @returns instance of Quaternion. If there is an inconsistency, it returns the identity.
          */
         public static fromArray(q: number[]): Quaternion {
             if (4 == q.length) {
@@ -181,7 +196,7 @@ namespace accelmagic {
          * @param z Vector part (z): Indicates the z-axis of rotation.
          */
         constructor(public w: number, public x: number, public y: number, public z: number) {
-            //
+            //this.normalize();
         }
 
         public normalize(): Quaternion {
@@ -237,7 +252,7 @@ namespace accelmagic {
         /**
          * build from array.
          * @param rpy [roll, pitch, yaw]
-         * @returns instance of EulerAngles
+         * @returns instance of EulerAngles. If there is an inconsistency, it returns the identity.
          */
         public static fromArray(rpy: number[]): EulerAngles {
             if (3 == rpy.length) {

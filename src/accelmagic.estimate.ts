@@ -17,9 +17,9 @@ namespace accelmagic {
     //% block
     //% group="Sensor"
     //% weight=110
-    export function estimate(): Quaternion {
+    export function estimate(): number[] {
         famc_.estimate();
-        return new Quaternion(famc_.getW(), famc_.getX(), famc_.getY(), famc_.getZ());
+        return [famc_.getW(), famc_.getX(), famc_.getY(), famc_.getZ()];
     }
 
     //% block
