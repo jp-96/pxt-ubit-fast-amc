@@ -1,7 +1,7 @@
 #include "pxt.h"
 #include "LowPassFilter.h"
 
-namespace famc_
+namespace accelmagicfamc_
 {
 
     static const double DEFAULT_ALPHA = 0.8;

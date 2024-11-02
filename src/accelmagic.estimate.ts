@@ -4,22 +4,22 @@ namespace accelmagic {
     //% group="Sensor"
     //% weight=130
     export function updateAcc(x: number, y: number, z: number): void {
-        famc_.updateAcceleration(x, y, z);
+        accelmagicfamc_.updateAcceleration(x, y, z);
     }
 
     //% block
     //% group="Sensor"
     //% weight=120
     export function updateMag(x: number, y: number, z: number): void {
-        famc_.updateMagneticForce(x, y, z);
+        accelmagicfamc_.updateMagneticForce(x, y, z);
     }
 
     //% block
     //% group="Sensor"
     //% weight=110
     export function estimate(): number[] {
-        famc_.estimate();
-        return [famc_.getW(), famc_.getX(), famc_.getY(), famc_.getZ()];
+        accelmagicfamc_.estimate();
+        return [accelmagicfamc_.getW(), accelmagicfamc_.getX(), accelmagicfamc_.getY(), accelmagicfamc_.getZ()];
     }
 
     //% block
@@ -27,7 +27,7 @@ namespace accelmagic {
     //% weight=100
     //% advanced=true
     export function setAlpha(alpha: number): void {
-        famc_.setLowPassFilterAlpha(alpha);
+        accelmagicfamc_.setLowPassFilterAlpha(alpha);
     }
 
 }
