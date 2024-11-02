@@ -7,7 +7,7 @@ function updateAlpha() {
     } else if (1 > alpha) {
         alpha = 1
     }
-    accelmagic.setLowPassFilterAlpha(alpha / 100)
+    accelmagic.setAlpha(alpha / 100)
     basic.showNumber(alpha)
 }
 input.onButtonPressed(Button.A, function () {
@@ -34,8 +34,8 @@ updateAlpha()
 basic.forever(function () {
 
     // RAW（North: A-button）
-    accelmagic.updateAcceleration(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    accelmagic.updateMagneticForce(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
+    accelmagic.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+    accelmagic.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
     // // Horizontal （North: Logo mark)
     // accelmagic.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
@@ -54,20 +54,20 @@ basic.forever(function () {
 
     // logging - Quaternion
     serial.writeString("Q:")
-    serial.writeNumbers(accelmagic.quatToArray(quat))
+    serial.writeNumbers(accelmagic.quatAsArray(quat))
 
     // // RAW --> Horizontal （North: Logo mark)
-    quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(0, 0.7, 0.7, 0))
+    quat = accelmagic.multiply(quat, accelmagic.quat(0, 0.7, 0.7, 0))
     // RAW --> Upright（North: Back side)
     //quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
     rpy = accelmagic.quatToRpy(quat)
 
-    serial.writeValue("A", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Azimuth)))
-    serial.writeValue("Y", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Yaw)))
-    serial.writeValue("P", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Pitch)))
-    serial.writeValue("R", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Roll)))
+    serial.writeValue("A", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Azimuth)))
+    serial.writeValue("Y", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Yaw)))
+    serial.writeValue("P", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Pitch)))
+    serial.writeValue("R", accelmagic.intDeg(accelmagic.angle(rpy,AngleRPY.Roll)))
 
     basic.pause(200)
 })

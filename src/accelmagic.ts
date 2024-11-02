@@ -1,4 +1,4 @@
-enum AngleRpy {
+enum AngleRPY {
     Roll,
     Pitch,
     Yaw,
@@ -12,79 +12,150 @@ enum AngleRpy {
  */
 //% block="Accel Magic"
 //% weight=100 color=#696969 icon="\uf1b2"
+//% groups="['Quaternion', 'EulerAngles', 'Sensor']"
 namespace accelmagic {
 
     //% block
-    //% advanced=true
-    export function setLowPassFilterAlpha(alpha: number): void {
-        famc_.setLowPassFilterAlpha(alpha);
-    }
-
-    //% block
-    export function updateAcceleration(x: number, y: number, z: number): void {
+    //% weight=130
+    export function updateAcc(x: number, y: number, z: number): void {
         famc_.updateAcceleration(x, y, z);
     }
 
     //% block
-    export function updateMagneticForce(x: number, y: number, z: number): void {
+    //% weight=120
+    export function updateMag(x: number, y: number, z: number): void {
         famc_.updateMagneticForce(x, y, z);
     }
 
     //% block
+    //% weight=110
     export function estimate(): Quaternion {
         famc_.estimate();
         return new Quaternion(famc_.getW(), famc_.getX(), famc_.getY(), famc_.getZ());
     }
 
     //% block
-    //% advanced=true
-    export function createQuat(w: number, x: number, y: number, z: number): Quaternion {
+    //% group="Quaternion"
+    //% weight=270
+    export function quat(w: number, x: number, y: number, z: number): Quaternion {
         return (new Quaternion(w, x, y, z)).normalize();
     }
 
     //% block
-    //% advanced=true
-    export function normalizeQuat(q: Quaternion): Quaternion {
+    //% group="Quaternion"
+    //% weight=260
+    export function normalize(q: Quaternion): Quaternion {
         return q.normalize();
     }
 
     //% block
-    //% advanced=true
-    export function conjugateQuat(q: Quaternion): Quaternion {
+    //% group="Quaternion"
+    //% weight=250
+    export function conjugate(q: Quaternion): Quaternion {
         return q.conjugate();
     }
 
     //% block
-    //% advanced=true
-    export function multiplyQuats(q0: Quaternion, q1: Quaternion): Quaternion {
-        return q0.multiply(q1);
+    //% group="Quaternion"
+    //% weight=240
+    export function multiply(a: Quaternion, b: Quaternion): Quaternion {
+        return a.multiply(b);
     }
 
     //% block
+    //% group="Quaternion"
+    //% weight=230
+    export function diff(a: Quaternion, b: Quaternion): Quaternion {
+        return a.conjugate().multiply(b);
+    }
+
+    //% block
+    //% group="Quaternion"
+    //% weight=220
+    export function rpyToQuat(rpy: EulerAngles): Quaternion {
+        return Quaternion.fromEulerAngles(rpy);
+    }
+
+    //% block
+    //% group="Quaternion"
+    //% weight=210
     //% advanced=true
-    export function quatToArray(q: Quaternion): number[] {
+    export function quatAsArray(q: Quaternion): number[] {
         return q.toArray();
     }
 
     //% block
-    export function quatToRpy(q: Quaternion): EulerAngles {
-        return EulerAngles.fromQuaternion(q);
+    //% group="EulerAngles"
+    //% weight=200
+    export function rpy(roll: number, pitch: number, yaw: number): EulerAngles {
+        return (new EulerAngles(roll, pitch, yaw));
     }
 
     //% block
-    export function getEulerAngles(eulerAngles: EulerAngles, angleRpy: AngleRpy): number {
-        switch (angleRpy){
-            case AngleRpy.Roll:
-                return eulerAngles.roll;
-            case AngleRpy.Pitch:
-                return eulerAngles.pitch;
-            case AngleRpy.Yaw:
-                return eulerAngles.yaw;
-            case AngleRpy.Azimuth:
-                return eulerAngles.getAzimuth();
+    //% group="EulerAngles"
+    //% weight=190
+    export function angle(rpy: EulerAngles, angleRPY: AngleRPY): number {
+        switch (angleRPY) {
+            case AngleRPY.Roll:
+                return rpy.roll;
+            case AngleRPY.Pitch:
+                return rpy.pitch;
+            case AngleRPY.Yaw:
+                return rpy.yaw;
+            case AngleRPY.Azimuth:
+                return rpy.getAzimuth();
             default:
                 return 0;
         }
+    }
+
+    //% block
+    //% group="EulerAngles"
+    //% weight=180
+    export function quatToRpy(q: Quaternion): EulerAngles {
+        return EulerAngles.fromQuaternion(q);
+    }
+    //% block
+    //% group="EulerAngles"
+    //% weight=170
+    //% advanced=true
+    export function rpyAsArray(rpy: EulerAngles): number[] {
+        return rpy.toArray();
+    }
+
+    const C180_OVER_PI = 180 / Math.PI;
+    const CPI_OVER_180 = Math.PI / 180;
+
+    //% block
+    //% group="EulerAngles"
+    //% weight=160
+    //% advanced=true
+    export function intDeg(radian: number): number {
+        return Math.round(decDeg(radian));
+    }
+
+    //% block
+    //% group="EulerAngles"
+    //% weight=150
+    //% advanced=true
+    export function decDeg(radian: number): number {
+        return radian * C180_OVER_PI;
+    }
+
+    //% block
+    //% group="EulerAngles"
+    //% weight=140
+    //% advanced=true
+    export function rad(degree: number): number {
+        return degree * CPI_OVER_180;
+    }
+
+    //% block
+    //% group="Sensor"
+    //% weight=100
+    //% advanced=true
+    export function setAlpha(alpha: number): void {
+        famc_.setLowPassFilterAlpha(alpha);
     }
 
     export class Quaternion {
@@ -102,6 +173,31 @@ namespace accelmagic {
             } else {
                 return Quaternion.identity;
             }
+        }
+
+        /**
+         * build from Euler angles.
+         * @param rpy instance of EulerAngles
+         * @returns instance of Quaternion
+         */
+        public static fromEulerAngles(rpy: EulerAngles): Quaternion {
+            const roll = rpy.roll;
+            const pitch = rpy.pitch;
+            const yaw = rpy.yaw;
+
+            const cy = Math.cos(yaw * 0.5);
+            const sy = Math.sin(yaw * 0.5);
+            const cp = Math.cos(pitch * 0.5);
+            const sp = Math.sin(pitch * 0.5);
+            const cr = Math.cos(roll * 0.5);
+            const sr = Math.sin(roll * 0.5);
+
+            const w = cr * cp * cy + sr * sp * sy;
+            const x = sr * cp * cy - cr * sp * sy;
+            const y = cr * sp * cy + sr * cp * sy;
+            const z = cr * cp * sy - sr * sp * cy;
+
+            return new Quaternion(w, x, y, z);
         }
 
         /**
@@ -136,7 +232,8 @@ namespace accelmagic {
         }
 
         public conjugate(): Quaternion {
-            return new Quaternion(this.w, -this.x, -this.y, -this.z);
+            // return new Quaternion(this.w, -this.x, -this.y, -this.z);
+            return new Quaternion(-this.w, this.x, this.y, this.z);
         }
 
         public multiply(q: Quaternion): Quaternion {
@@ -188,15 +285,15 @@ namespace accelmagic {
             const t0 = 2.0 * (q.w * q.x + q.y * q.z);
             const t1 = 1.0 - 2.0 * (q.x * q.x + ysqr);
             const roll = Math.atan2(t0, t1);
-    
+
             let t2 = 2.0 * (q.w * q.y - q.z * q.x);
             t2 = t2 > 1.0 ? 1.0 : (t2 < -1.0 ? -1.0 : t2);
             const pitch = Math.asin(t2);
-    
+
             const t3 = 2.0 * (q.w * q.z + q.x * q.y);
             const t4 = 1.0 - 2.0 * (ysqr + q.z * q.z);
             const yaw = Math.atan2(t3, t4);
-    
+
             return new EulerAngles(roll, pitch, yaw);
         }
 
@@ -226,26 +323,6 @@ namespace accelmagic {
             return [this.roll, this.pitch, this.yaw];
         }
 
-    }
-
-    const C180_OVER_PI = 180 / Math.PI;
-    const CPI_OVER_180 = Math.PI / 180;
-
-    //% block
-    export function toIntegerDegree(radian: number): number {
-        return Math.round(toDegree(radian));
-    }
-
-    //% block
-    //% advanced=true
-    export function toDegree(radian: number): number {
-        return radian * C180_OVER_PI;
-    }
-
-    //% block
-    //% advanced=true
-    export function toRadian(degree: number): number {
-        return degree * CPI_OVER_180;
     }
 
 }
