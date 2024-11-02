@@ -33,15 +33,15 @@ updateAlpha()
 
 basic.forever(function () {
 
-    // RAW（North: A-button）
+    // RAW (North: A-button, upside-down)
     accelmagic.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
     accelmagic.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
-    // // Horizontal （North: Logo mark)
+    // // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
     // accelmagic.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
     // accelmagic.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
 
-    // // Upright（North: Back side)
+    // // TILT: a tilt compensated bearing of the device (North: back side)
     // accelmagic.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
     // accelmagic.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
 
@@ -56,9 +56,9 @@ basic.forever(function () {
     serial.writeString("Q:")
     serial.writeNumbers(accelmagic.quatAsArray(quat))
 
-    // // RAW --> Horizontal （North: Logo mark)
+    // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
     quat = accelmagic.multiply(quat, accelmagic.quat(0, 0.7, 0.7, 0))
-    // RAW --> Upright（North: Back side)
+    // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
     //quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
