@@ -1,5 +1,5 @@
 #include "pxt.h"
-#include "LowPassFilter.h"
+#include "lib/LowPassFilter.h"
 
 namespace accelmagicfamc_
 {

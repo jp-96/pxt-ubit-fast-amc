@@ -8,10 +8,10 @@
     "files": [
         "src/lib/LowPassFilter.h",
         "src/lib/LowPassFilter.cpp",
-        "src/lib/famc_.ts",
-        "src/lib/famc_.cpp",
-        "src/accelmagic.ts",
+        "src/accelmagicfamc_.ts",
+        "src/accelmagicfamc_.cpp",
         "src/accelmagic.estimate.ts",
+        "src/accelmagic.ts",
         "enums.d.ts",
         "shims.d.ts",
         "README.md"
