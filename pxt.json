@@ -11,6 +11,7 @@
         "src/lib/famc_.ts",
         "src/lib/famc_.cpp",
         "src/accelmagic.ts",
+        "src/accelmagic.estimate.ts",
         "enums.d.ts",
         "shims.d.ts",
         "README.md"
