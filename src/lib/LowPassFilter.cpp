@@ -1,16 +1,15 @@
 #include "LowPassFilter.h"
 
-LowPassFilter::LowPassFilter() : alpha(1.0), prev(0.0) {}
+LowPassFilter::LowPassFilter(double newAlpha) : alpha(0.8), prev(0.0)
+{
+    setAlpha(newAlpha);
+}
 
 void LowPassFilter::setAlpha(double newAlpha)
 {
-    if (newAlpha < 0.0)
+    if ((0.0 > newAlpha) || (1.0 < newAlpha))
     {
-        newAlpha = 0.0;
-    }
-    else if (newAlpha > 1.0)
-    {
-        newAlpha = 1.0;
+        return;
     }
     alpha = newAlpha;
 }

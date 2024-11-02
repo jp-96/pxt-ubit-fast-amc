@@ -7,7 +7,7 @@ function updateAlpha() {
     } else if (1 > alpha) {
         alpha = 1
     }
-    accelmagic.setLowPassFilterAlpha(alpha / 10)
+    accelmagic.setLowPassFilterAlpha(alpha / 100)
     basic.showNumber(alpha)
 }
 input.onButtonPressed(Button.A, function () {
@@ -16,29 +16,30 @@ input.onButtonPressed(Button.A, function () {
 })
 input.onButtonPressed(Button.AB, function () {
     input.calibrateCompass()
+    updateAlpha()
 })
 input.onButtonPressed(Button.B, function () {
     alpha += 1
     updateAlpha()
 })
-let euler: number[] = []
-let quat: number[] = []
+let rpy: accelmagic.EulerAngles = null
+let quat: accelmagic.Quaternion = null
 let alpha = 0
-alpha = 4
-updateAlpha()
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
-serial.writeLine("Hello, Accel Magic!")
+basic.showString("AccelMagic!")
+alpha = 4
+updateAlpha()
 
 basic.forever(function () {
 
-    // // RAW（North: A-button）
-    // accelmagic.updateAcceleration(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    // accelmagic.updateMagneticForce(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
+    // RAW（North: A-button）
+    accelmagic.updateAcceleration(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+    accelmagic.updateMagneticForce(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
     // // Horizontal （North: Logo mark)
-    accelmagic.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
-    accelmagic.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
+    // accelmagic.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
+    // accelmagic.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
 
     // // Upright（North: Back side)
     // accelmagic.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
@@ -47,23 +48,26 @@ basic.forever(function () {
 })
 
 basic.forever(function () {
+
     // estimate
-    quat = accelmagic.estimateQuaternion()
+    quat = accelmagic.estimate()
 
-    // logging
-    serial.writeString("quaternion:")
-    serial.writeNumbers(quat)
-    euler = accelmagic.quaternionToEulerAngles(quat)
+    // logging - Quaternion
+    serial.writeString("Q:")
+    serial.writeNumbers(accelmagic.quatToArray(quat))
 
-    // serial.writeValue("AZMT(rad)", accelmagic.getAzimuthRadians(euler))
-    // serial.writeValue("HEAD(rad)", accelmagic.getHeadingRadians(euler))
-    // serial.writeValue("PTCH(rad)", accelmagic.getPitchRadians(euler))
-    // serial.writeValue("BANK(rad)", accelmagic.getBankRadians(euler))
-    
-    serial.writeValue("AZMT(deg)", accelmagic.getAzimuth(euler))
-    serial.writeValue("HEAD(deg)", accelmagic.getHeading(euler))
-    serial.writeValue("PITC(deg)", accelmagic.getPitch(euler))
-    serial.writeValue("BANK(deg)", accelmagic.getBank(euler))
-    
+    // // RAW --> Horizontal （North: Logo mark)
+    quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(0, 0.7, 0.7, 0))
+    // RAW --> Upright（North: Back side)
+    //quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(-0.5, 0.5, 0.5, 0.5))
+
+    // logging - EulerAngles
+    rpy = accelmagic.quatToRpy(quat)
+
+    serial.writeValue("A", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Azimuth)))
+    serial.writeValue("Y", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Yaw)))
+    serial.writeValue("P", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Pitch)))
+    serial.writeValue("R", accelmagic.toIntegerDegree(accelmagic.getEulerAngles(rpy,AngleRpy.Roll)))
+
     basic.pause(200)
 })

@@ -11,7 +11,59 @@ namespace famc_ {
     let mz = 0.0;
 
     // Quaternion for simulator
-    let q_ = Quaternion.kQuaternionIdentity;
+    let q_ = [1.0, 0.0, 0.0, 0.0];
+
+    let alpha_ = 1.0;
+
+    //% shim=famc_::setLowPassFilterAlpha
+    export function setLowPassFilterAlpha(alpha: number): void {
+        alpha_ = alpha;
+    }
+
+    //% shim=famc_::updateAcceleration
+    export function updateAcceleration(x: number, y: number, z: number): void {
+        let norm = Math.sqrt(x * x + y * y + z * z)
+        if (0 < norm) {
+            norm = 1 / norm;
+            ax = x * norm;
+            ay = y * norm;
+            az = z * norm;
+        }
+    }
+
+    //% shim=famc_::updateMagneticForce
+    export function updateMagneticForce(x: number, y: number, z: number): void {
+        let norm = Math.sqrt(x * x + y * y + z * z)
+        if (0 < norm) {
+            norm = 1 / norm;
+            mx = x * norm;
+            my = y * norm;
+            mz = z * norm;
+        }
+    }
+
+    function simuEstimate(): void {
+        // Accelerration Only for simulator
+        let w = Math.sqrt((az + 1.0) / 2.0)
+        let x = ay / (2.0 * w)
+        let y = -ax / (2.0 * w)
+        let z = 0.0
+        let norm = Math.sqrt(w * w + x * x + y * y + z * z)
+        if (0 < norm) {
+            norm = 1 / norm;
+            w *= norm;
+            x *= norm;
+            y *= norm;
+            z *= norm;
+            q_ = [w, x, y, z];
+        }
+    }
+
+    //% shim=famc_::estimate
+    export function estimate(): void {
+        // for simulator
+        simuEstimate();
+    }
 
     //% shim=famc_::getW
     export function getW(): number {
@@ -31,56 +83,6 @@ namespace famc_ {
     //% shim=famc_::getZ
     export function getZ(): number {
         return q_[3];
-    }
-
-    let alpha_ = 1.0;
-
-    //% shim=famc_::setLowPassFilterAlpha
-    export function setLowPassFilterAlpha(alpha: number): void {
-        alpha_ = alpha;
-    }
-
-    //% shim=famc_::updateAcceleration
-    export function updateAcceleration(x: number, y: number, z: number): void {
-        const norm = Math.sqrt(x * x + y * y + z * z)
-        if (norm > 0) {
-            ax = x / norm;
-            ay = y / norm;
-            az = z / norm;
-        } else {
-            ax = 0.0;
-            ay = 0.0;
-            az = 1.0;
-        }
-    }
-
-    //% shim=famc_::updateMagneticForce
-    export function updateMagneticForce(x: number, y: number, z: number): void {
-        const norm = Math.sqrt(x * x + y * y + z * z)
-        if (norm > 0) {
-            mx = x / norm;
-            my = y / norm;
-            az = z / norm;
-        } else {
-            mx = 1.0;
-            my = 0.0;
-            mz = 0.0;
-        }
-    }
-
-    function simuEstimate(): void {
-        // Accelerration Only for simulator
-        const qw = Math.sqrt((az + 1.0) / 2.0)
-        const qx = ay / (2.0 * qw)
-        const qy = -ax / (2.0 * qw)
-        const qz = 0.0
-        q_ = Quaternion.normalize([qw, qx, qy, qz]);
-    }
-
-    //% shim=famc_::estimate
-    export function estimate(): void {
-        // for simulator
-        simuEstimate();
     }
 
 }

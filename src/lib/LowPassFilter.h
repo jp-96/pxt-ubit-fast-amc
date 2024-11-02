@@ -4,7 +4,7 @@
 class LowPassFilter
 {
 public:
-    LowPassFilter();
+    LowPassFilter(double newAlpha = 0.8);
     void setAlpha(double alpha);
     double filter(double input);
 
