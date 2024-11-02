@@ -1,7 +1,21 @@
 #include "pxt.h"
+#include "LowPassFilter.h"
 
 namespace famc_
 {
+
+    static const double DEFAULT_ALPHA = 0.8;
+
+    // Accelerration filter
+    LowPassFilter filterAx(DEFAULT_ALPHA);
+    LowPassFilter filterAy(DEFAULT_ALPHA);
+    LowPassFilter filterAz(DEFAULT_ALPHA);
+
+    // Magnetic force filter
+    LowPassFilter filterMx(DEFAULT_ALPHA);
+    LowPassFilter filterMy(DEFAULT_ALPHA);
+    LowPassFilter filterMz(DEFAULT_ALPHA);
+
     // Accelerration (normalized)
     double ax = 0.0;
     double ay = 0.0;
@@ -14,50 +28,51 @@ namespace famc_
 
     // Quaternion (normalized)
     double qw = 1.0;
-    double qx = 2.0;
-    double qy = 3.0;
-    double qz = 4.0;
+    double qx = 0.0;
+    double qy = 0.0;
+    double qz = 0.0;
 
     //%
-    void setAcceleration(TNumber x, TNumber y, TNumber z)
+    void setLowPassFilterAlpha(TNumber alpha)
     {
-        ax = toDouble(x);
-        ay = toDouble(y);
-        az = toDouble(z);
-        double norm = sqrt(ax * ax + ay * ay + az * az);
-        if (norm > 0)
+        const double newAlpha = toDouble(alpha);
+        filterAx.setAlpha(newAlpha);
+        filterAy.setAlpha(newAlpha);
+        filterAz.setAlpha(newAlpha);
+        filterMx.setAlpha(newAlpha);
+        filterMy.setAlpha(newAlpha);
+        filterMz.setAlpha(newAlpha);
+    }
+
+    //%
+    void updateAcceleration(TNumber accX, TNumber accY, TNumber accZ)
+    {
+        const double x = filterAx.filter(toDouble(accX));
+        const double y = filterAy.filter(toDouble(accY));
+        const double z = filterAz.filter(toDouble(accZ));
+        double norm = sqrt(x * x + y * y + z * z);
+        if (0 < norm)
         {
-            ax /= norm;
-            ay /= norm;
-            az /= norm;
-        }
-        else
-        {
-            ax = 0.0;
-            ay = 0.0;
-            az = 1.0;
+            norm = 1 / norm;
+            ax = x * norm;
+            ay = y * norm;
+            az = z * norm;
         }
     }
 
     //%
-    void setMagneticForce(TNumber x, TNumber y, TNumber z)
+    void updateMagneticForce(TNumber magX, TNumber magY, TNumber magZ)
     {
-        mx = toDouble(x);
-        my = toDouble(y);
-        mz = toDouble(z);
-        double norm = sqrt(mx * mx + my * my + mz * mz);
-        if (norm > 0)
+        const double x = filterMx.filter(toDouble(magX));
+        const double y = filterMy.filter(toDouble(magY));
+        const double z = filterMz.filter(toDouble(magZ));
+        double norm = sqrt(x * x + y * y + z * z);
+        if (0 < norm)
         {
-            mx /= norm;
-            my /= norm;
-            mz /= norm;
-        }
-        else
-        {
-            // default
-            mx = 0.0;
-            my = 0.0;
-            mz = 1.0;
+            norm = 1 / norm;
+            mx = x * norm;
+            my = y * norm;
+            mz = z * norm;
         }
     }
 
@@ -114,17 +129,21 @@ namespace famc_
         double c3 = A23 * A33 * (B13 - B31);
 
         // Quaternion
-        qw = -1.0;
-        qx = a1 - a2 - a3;
-        qy = b1 - b2 - b3;
-        qz = c1 - c2 - c3;
+        double w = -1.0;
+        double x = a1 - a2 - a3;
+        double y = b1 - b2 - b3;
+        double z = c1 - c2 - c3;
 
-        double norm = sqrt(qw * qw + qx * qx + qy * qy + qz * qz);
-        qw /= norm;
-        qx /= norm;
-        qy /= norm;
-        qz /= norm;
-
+        // normalize
+        double norm = sqrt(w * w + x * x + y * y + z * z);
+        if (0 < norm)
+        {
+            norm = 1 / norm;
+            qw = w * norm;
+            qx = x * norm;
+            qy = y * norm;
+            qz = z * norm;
+        }
     }
 
     //%
