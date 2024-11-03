@@ -1,4 +1,4 @@
-namespace famc_ {
+namespace accelmagicfamc_ {
 
     // Accelerration (normalized)
     let ax = 0.0;
@@ -15,12 +15,12 @@ namespace famc_ {
 
     let alpha_ = 1.0;
 
-    //% shim=famc_::setLowPassFilterAlpha
+    //% shim=accelmagicfamc_::setLowPassFilterAlpha
     export function setLowPassFilterAlpha(alpha: number): void {
         alpha_ = alpha;
     }
 
-    //% shim=famc_::updateAcceleration
+    //% shim=accelmagicfamc_::updateAcceleration
     export function updateAcceleration(x: number, y: number, z: number): void {
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
@@ -31,7 +31,7 @@ namespace famc_ {
         }
     }
 
-    //% shim=famc_::updateMagneticForce
+    //% shim=accelmagicfamc_::updateMagneticForce
     export function updateMagneticForce(x: number, y: number, z: number): void {
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
@@ -59,28 +59,28 @@ namespace famc_ {
         }
     }
 
-    //% shim=famc_::estimate
+    //% shim=accelmagicfamc_::estimate
     export function estimate(): void {
         // for simulator
         simuEstimate();
     }
 
-    //% shim=famc_::getW
+    //% shim=accelmagicfamc_::getW
     export function getW(): number {
         return q_[0];
     }
 
-    //% shim=famc_::getX
+    //% shim=accelmagicfamc_::getX
     export function getX(): number {
         return q_[1];
     }
 
-    //% shim=famc_::getY
+    //% shim=accelmagicfamc_::getY
     export function getY(): number {
         return q_[2];
     }
 
-    //% shim=famc_::getZ
+    //% shim=accelmagicfamc_::getZ
     export function getZ(): number {
         return q_[3];
     }

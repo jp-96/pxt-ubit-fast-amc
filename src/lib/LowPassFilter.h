@@ -1,5 +1,5 @@
-#ifndef LOWPASSFILTER_H
-#define LOWPASSFILTER_H
+#ifndef ACCELMAGIC_LOWPASSFILTER_H
+#define ACCELMAGIC_LOWPASSFILTER_H
 
 class LowPassFilter
 {
@@ -13,4 +13,4 @@ private:
     double prev;
 };
 
-#endif // LOWPASSFILTER_H
+#endif // ACCELMAGIC_LOWPASSFILTER_H
