@@ -27,7 +27,7 @@ let quat: accelmagic.Quaternion = null
 let alpha = 0
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
-basic.showString("AccelMagic!")
+basic.showString("AccelMagiQ!")
 alpha = 4
 updateAlpha()
 
