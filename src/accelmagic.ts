@@ -145,15 +145,15 @@ namespace accelmagic {
     export function rad(degree: number): number {
         return degree * CPI_OVER_180;
     }
-
+    
     export class Quaternion {
 
         public static identity = new Quaternion(1.0, 0.0, 0.0, 0.0);
 
         /**
-         * build from array.
-         * @param q [w, x, y, z]
-         * @returns instance of Quaternion. If there is an inconsistency, it returns the identity.
+         * Creates a quaternion from an array.
+         * @param q [w, x, y, z] - The quaternion components.
+         * @returns An instance of Quaternion. If there is an inconsistency, it returns the identity quaternion.
          */
         public static fromArray(q: number[]): Quaternion {
             if (4 == q.length) {
@@ -164,9 +164,9 @@ namespace accelmagic {
         }
 
         /**
-         * build from Euler angles.
-         * @param rpy instance of EulerAngles
-         * @returns instance of Quaternion
+         * Creates a quaternion from Euler angles.
+         * @param rpy An instance of EulerAngles.
+         * @returns An instance of Quaternion.
          */
         public static fromEulerAngles(rpy: EulerAngles): Quaternion {
             const roll = rpy.roll;
@@ -189,16 +189,20 @@ namespace accelmagic {
         }
 
         /**
-         * constructor
+         * Constructor for creating a quaternion.
          * @param w Scalar part (w): Represents the magnitude or angle of rotation.
          * @param x Vector part (x): Indicates the x-axis of rotation.
          * @param y Vector part (y): Indicates the y-axis of rotation.
          * @param z Vector part (z): Indicates the z-axis of rotation.
          */
         constructor(public w: number, public x: number, public y: number, public z: number) {
-            //this.normalize();
+            // this.normalize();
         }
 
+        /**
+         * Normalizes the quaternion.
+         * @returns A unit quaternion or the identity quaternion if normalization fails.
+         */
         public normalize(): Quaternion {
             let w = this.w;
             let x = this.x;
@@ -219,11 +223,19 @@ namespace accelmagic {
             }
         }
 
+        /**
+         * Computes the conjugate of the quaternion.
+         * @returns The conjugate of the quaternion.
+         */
         public conjugate(): Quaternion {
-            // return new Quaternion(this.w, -this.x, -this.y, -this.z);
-            return new Quaternion(-this.w, this.x, this.y, this.z);
+            return new Quaternion(this.w, -this.x, -this.y, -this.z);
         }
 
+        /**
+         * Multiplies this quaternion by another quaternion.
+         * @param q Another quaternion.
+         * @returns The product of the two quaternions.
+         */
         public multiply(q: Quaternion): Quaternion {
             return new Quaternion(
                 this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z,
@@ -234,11 +246,20 @@ namespace accelmagic {
         }
 
         /**
-         * to array.
-         * @returns [w, x, y, z]
+         * Converts the quaternion to an array.
+         * @returns An array [w, x, y, z] representing the quaternion.
          */
         public toArray(): number[] {
             return [this.w, this.x, this.y, this.z];
+        }
+
+        /**
+         * Computes the rotation angle of the quaternion.
+         * @returns The rotation angle in radians.
+         */
+        public getRotationAngle(): number {
+            const q = this.normalize();
+            return 2.0 * Math.acos(q.w);
         }
 
     }
