@@ -1,94 +1,178 @@
+/**
+ * Enum for selecting angles in Euler angles.
+ */
 enum AngleRPY {
+    /** Roll angle (rotation around the X-axis) */
+    //% block="Roll"
     Roll,
+    /** Pitch angle (rotation around the Y-axis) */
+    //% block="Pitch"
     Pitch,
+    /** Yaw angle (rotation around the Z-axis) */
+    //% block="Yaw"
     Yaw,
+    /** Azimuth angle (derived from the yaw angle) */
+    //% block="Azimuth"
     Azimuth,
 }
 
 /**
  * A Simplified Analytic Attitude Determination Algorithm
- * Using Accelerometer and Magnetometer on micro:bit.
+ * using Accelerometer and Magnetometer on micro:bit.
  * 
+ * It's like magic! This algorithm turns raw data into accurate and efficient quaternion estimations,
+ * transforming your projects and making you go, "Wow!" Using the handy micro:bit, it feels like trying
+ * out quaternions is pure magic. AccelMagiQ brings a touch of enchantment to the technical world.
+ * We hope this helps you in your learning journey and sparks your curiosity about the fascinating
+ * world of quaternions.
+ * 
+ * "AccelMagiQ" refers to this amazing algorithm that combines accelerometer and magnetometer data to
+ * create precise quaternion calculations. It's a playful blend of 'acceleration', 'magnetometer', and 'magic' with
+ * quaternions ('Q'), making advanced concepts seem like magic!
  */
-//% block="Accel Magic"
+//% block="AccelMagiQ"
 //% weight=100 color=#696969 icon="\uf1b2"
 //% groups="['Quaternion', 'EulerAngles', 'Sensor']"
 namespace accelmagic {
 
-    //% block
+    /**
+     * Creates a quaternion from an array.
+     * @param q An array [w, x, y, z].
+     * @returns An instance of Quaternion. If there is an inconsistency, it returns the identity quaternion.
+     */
+    //% block="Create Quaternion from Array %q"
     //% group="Quaternion"
-    //% weight=270
-    export function quat(w: number, x: number, y: number, z: number): Quaternion {
-        return new Quaternion(w, x, y, z)
-    }
-
-    //% block
-    //% group="Quaternion"
-    //% weight=210
-    //% advanced=true
+    //% weight=138
     export function quatFrom(q: number[]): Quaternion {
         return Quaternion.fromArray(q);
     }
 
-    //% block
+    /**
+     * Normalizes the quaternion.
+     * @param q An instance of Quaternion.
+     * @returns A normalized Quaternion.
+     */
+    //% block="Normalize Quaternion %q"
     //% group="Quaternion"
-    //% weight=260
+    //% weight=137
     export function normalize(q: Quaternion): Quaternion {
         return q.normalize();
     }
 
-    //% block
+    /**
+     * Computes the conjugate of the quaternion.
+     * @param q An instance of Quaternion.
+     * @returns The conjugate of the quaternion.
+     */
+    //% block="Conjugate Quaternion %q"
     //% group="Quaternion"
-    //% weight=250
+    //% weight=136
     export function conjugate(q: Quaternion): Quaternion {
         return q.conjugate();
     }
 
-    //% block
+    /**
+     * Multiplies two quaternions.
+     * @param a The first quaternion.
+     * @param b The second quaternion.
+     * @returns The product of the two quaternions.
+     */
+    //% block="Multiply Quaternions %a and %b"
     //% group="Quaternion"
-    //% weight=240
+    //% weight=135
     export function multiply(a: Quaternion, b: Quaternion): Quaternion {
         return a.multiply(b);
     }
 
-    //% block
+    /**
+     * Computes the difference between two quaternions.
+     * @param a The first quaternion.
+     * @param b The second quaternion.
+     * @returns The difference between the two quaternions.
+     */
+    //% block="Difference of Quaternions %a and %b"
     //% group="Quaternion"
-    //% weight=230
+    //% weight=134
     export function diff(a: Quaternion, b: Quaternion): Quaternion {
         return a.conjugate().multiply(b);
     }
 
-    //% block
+    /**
+     * Computes the rotation angle of the quaternion.
+     * @param q An instance of Quaternion.
+     * @returns The rotation angle in radians.
+     */
+    //% block="Quaternion Rotation Angle %q"
     //% group="Quaternion"
-    //% weight=220
+    //% weight=133
+    export function quatRotationAngle(q: Quaternion): number {
+        return q.getRotationAngle();
+    }
+
+    /**
+     * Creates a quaternion.
+     * @param w Scalar part (w): Represents the magnitude or angle of rotation.
+     * @param x Vector part (x): Indicates the x-axis of rotation.
+     * @param y Vector part (y): Indicates the y-axis of rotation.
+     * @param z Vector part (z): Indicates the z-axis of rotation.
+     * @returns An instance of Quaternion.
+     */
+    //% block="Create Quaternion w %w x %x y %y z %z"
+    //% inlineInputMode=inline
+    //% group="Quaternion"
+    //% weight=132
+    //% advanced=true
+    export function quat(w: number, x: number, y: number, z: number): Quaternion {
+        return new Quaternion(w, x, y, z)
+    }
+
+    /**
+     * Creates a quaternion from Euler angles.
+     * @param rpy An instance of EulerAngles.
+     * @returns An instance of Quaternion.
+     */
+    //% block="Create Quaternion from Euler Angles %rpy"
+    //% group="Quaternion"
+    //% weight=131
+    //% advanced=true
     export function quatFromRpy(rpy: EulerAngles): Quaternion {
         return Quaternion.fromEulerAngles(rpy);
     }
 
-    //% block
+    /**
+     * Converts the quaternion to an array.
+     * @param q An instance of Quaternion.
+     * @returns An array [w, x, y, z] representing the quaternion.
+     */
+    //% block="Quaternion to Array %q"
     //% group="Quaternion"
-    //% weight=210
+    //% weight=130
     //% advanced=true
     export function quatAsArray(q: Quaternion): number[] {
         return q.toArray();
     }
 
-    //% block
+    /**
+     * Creates an instance of EulerAngles from a quaternion.
+     * @param q An instance of Quaternion.
+     * @returns An instance of EulerAngles.
+     */
+    //% block="Create Euler Angles from Quaternion %q"
     //% group="EulerAngles"
-    //% weight=200
-    export function rpy(roll: number, pitch: number, yaw: number): EulerAngles {
-        return new EulerAngles(roll, pitch, yaw);
+    //% weight=124
+    export function rpyFromQuat(q: Quaternion): EulerAngles {
+        return EulerAngles.fromQuaternion(q);
     }
 
-    //% block
+    /**
+     * Retrieves a specific angle from EulerAngles.
+     * @param rpy An instance of EulerAngles.
+     * @param angleRPY The angle to retrieve (Roll, Pitch, Yaw, or Azimuth).
+     * @returns The specified angle in radians.
+     */
+    //% block="Get Angle from Euler Angles %rpy angle %angleRPY"
     //% group="EulerAngles"
-    //% weight=180
-    export function rpyFrom(rpy: number[]): EulerAngles {
-        return EulerAngles.fromArray(rpy);
-    }
-    //% block
-    //% group="EulerAngles"
-    //% weight=190
+    //% weight=123
     export function angle(rpy: EulerAngles, angleRPY: AngleRPY): number {
         switch (angleRPY) {
             case AngleRPY.Roll:
@@ -104,16 +188,42 @@ namespace accelmagic {
         }
     }
 
-    //% block
+    /**
+     * Creates an instance of EulerAngles.
+     * @param roll Rotation around the X-axis. It’s how much tilts to its sides.
+     * @param pitch Rotation around the Y-axis. It’s how much nose is up or down.
+     * @param yaw Rotation around the Z-axis.
+     * @returns An instance of EulerAngles.
+     */
+    //% block="Create Euler Angles roll %roll pitch %pitch yaw %yaw"
     //% group="EulerAngles"
-    //% weight=180
-    export function rpyFromQuat(q: Quaternion): EulerAngles {
-        return EulerAngles.fromQuaternion(q);
+    //% weight=122
+    //% advanced=true
+    export function rpy(roll: number, pitch: number, yaw: number): EulerAngles {
+        return new EulerAngles(roll, pitch, yaw);
     }
 
-    //% block
+    /**
+     * Creates an instance of EulerAngles from an array.
+     * @param rpy An array [roll, pitch, yaw].
+     * @returns An instance of EulerAngles. If there is an inconsistency, it returns the identity.
+     */
+    //% block="Create Euler Angles from Array %rpy"
     //% group="EulerAngles"
-    //% weight=170
+    //% weight=121
+    //% advanced=true
+    export function rpyFrom(rpy: number[]): EulerAngles {
+        return EulerAngles.fromArray(rpy);
+    }
+
+    /**
+     * Converts the Euler angles to an array.
+     * @param rpy An instance of EulerAngles.
+     * @returns An array [roll, pitch, yaw] representing the Euler angles in radians.
+     */
+    //% block="Euler Angles to Array %rpy"
+    //% group="EulerAngles"
+    //% weight=120
     //% advanced=true
     export function rpyAsArray(rpy: EulerAngles): number[] {
         return rpy.toArray();
@@ -122,33 +232,53 @@ namespace accelmagic {
     const C180_OVER_PI = 180 / Math.PI;
     const CPI_OVER_180 = Math.PI / 180;
 
-    //% block
+    /**
+     * Converts radians to integer degrees.
+     * @param radian The angle in radians.
+     * @returns The angle in integer degrees.
+     */
+    //% block="Radians %radian to Integer Degrees"
     //% group="EulerAngles"
-    //% weight=160
-    //% advanced=true
+    //% weight=112
     export function intDeg(radian: number): number {
         return Math.round(decDeg(radian));
     }
 
-    //% block
+    /**
+     * Converts radians to decimal degrees.
+     * @param radian The angle in radians.
+     * @returns The angle in decimal degrees.
+     */
+    //% block="Radians %radian to Decimal Degrees"
     //% group="EulerAngles"
-    //% weight=150
+    //% weight=111
     //% advanced=true
     export function decDeg(radian: number): number {
         return radian * C180_OVER_PI;
     }
 
-    //% block
+    /**
+     * Converts degrees to radians.
+     * @param degree The angle in degrees.
+     * @returns The angle in radians.
+     */
+    //% block="Degrees %degree to Radians"
     //% group="EulerAngles"
-    //% weight=140
+    //% weight=110
     //% advanced=true
     export function rad(degree: number): number {
         return degree * CPI_OVER_180;
     }
-    
+
+    /**
+     * A class to represent a quaternion for 3D rotations.
+     */
     export class Quaternion {
 
-        public static identity = new Quaternion(1.0, 0.0, 0.0, 0.0);
+        /**
+         * The identity quaternion.
+         */
+        private static identity = new Quaternion(1.0, 0.0, 0.0, 0.0);
 
         /**
          * Creates a quaternion from an array.
@@ -264,16 +394,25 @@ namespace accelmagic {
 
     }
 
+    /**
+     * A class to represent Euler angles for 3D rotations.
+     */
     export class EulerAngles {
 
+        /**
+         * The value of 2xPI (full circle in radians).
+         */
         private static PI_2 = Math.PI * 2.0;
 
-        public static identity = new EulerAngles(0.0, 0.0, 0.0);
+        /**
+         * The identity Euler angles (0, 0, 0).
+         */
+        private static identity = new EulerAngles(0.0, 0.0, 0.0);
 
         /**
-         * build from array.
-         * @param rpy [roll, pitch, yaw]
-         * @returns instance of EulerAngles. If there is an inconsistency, it returns the identity.
+         * Creates an instance of EulerAngles from an array.
+         * @param rpy [roll, pitch, yaw] - The Euler angles in radians.
+         * @returns An instance of EulerAngles. If there is an inconsistency, it returns the identity.
          */
         public static fromArray(rpy: number[]): EulerAngles {
             if (3 == rpy.length) {
@@ -284,9 +423,9 @@ namespace accelmagic {
         }
 
         /**
-         * build from Quaternion.
-         * @param q instance of Quaternion
-         * @returns instance of EulerAngles
+         * Creates an instance of EulerAngles from a Quaternion.
+         * @param q An instance of Quaternion.
+         * @returns An instance of EulerAngles.
          */
         public static fromQuaternion(q: Quaternion): EulerAngles {
 
@@ -307,7 +446,7 @@ namespace accelmagic {
         }
 
         /**
-         * constructor
+         * Constructor for creating an instance of EulerAngles.
          * @param roll Rotation around the X-axis. It’s how much tilts to its sides.
          * @param pitch Rotation around the Y-axis. It’s how much nose is up or down.
          * @param yaw Rotation around the Z-axis.
@@ -316,6 +455,10 @@ namespace accelmagic {
             //
         }
 
+        /**
+         * Computes the azimuth angle from the yaw angle.
+         * @returns The azimuth angle in radians.
+         */
         public getAzimuth(): number {
             if (this.yaw > 0) {
                 return EulerAngles.PI_2 - this.yaw;
@@ -325,8 +468,8 @@ namespace accelmagic {
         }
 
         /**
-         * to array.
-         * @returns [roll, pitch, yaw]
+         * Converts the Euler angles to an array.
+         * @returns An array [roll, pitch, yaw] representing the Euler angles in radians.
          */
         public toArray(): number[] {
             return [this.roll, this.pitch, this.yaw];
