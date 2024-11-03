@@ -33,7 +33,7 @@ enum AngleRPY {
 //% block="AccelMagiQ"
 //% weight=100 color=#696969 icon="\uf1b2"
 //% groups="['Quaternion', 'EulerAngles', 'Sensor']"
-namespace accelmagic {
+namespace accelmagiq {
 
     /**
      * Creates a quaternion from an array.
