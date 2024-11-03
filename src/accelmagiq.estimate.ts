@@ -1,4 +1,4 @@
-namespace accelmagic {
+namespace accelmagiq {
 
     /**
      * Updates the acceleration values.
@@ -10,7 +10,7 @@ namespace accelmagic {
     //% group="Sensor"
     //% weight=143
     export function updateAcc(x: number, y: number, z: number): void {
-        accelmagicfamc_.updateAcceleration(x, y, z);
+        accelmagiqfamc_.updateAcceleration(x, y, z);
     }
 
     /**
@@ -23,7 +23,7 @@ namespace accelmagic {
     //% group="Sensor"
     //% weight=142
     export function updateMag(x: number, y: number, z: number): void {
-        accelmagicfamc_.updateMagneticForce(x, y, z);
+        accelmagiqfamc_.updateMagneticForce(x, y, z);
     }
 
     /**
@@ -34,8 +34,8 @@ namespace accelmagic {
     //% group="Sensor"
     //% weight=141
     export function estimate(): number[] {
-        accelmagicfamc_.estimate();
-        return [accelmagicfamc_.getW(), accelmagicfamc_.getX(), accelmagicfamc_.getY(), accelmagicfamc_.getZ()];
+        accelmagiqfamc_.estimate();
+        return [accelmagiqfamc_.getW(), accelmagiqfamc_.getX(), accelmagiqfamc_.getY(), accelmagiqfamc_.getZ()];
     }
 
     /**
@@ -48,7 +48,7 @@ namespace accelmagic {
     //% alpha.defl=0.8
     //% advanced=true
     export function setAlpha(alpha: number = 0.8): void {
-        accelmagicfamc_.setLowPassFilterAlpha(alpha);
+        accelmagiqfamc_.setLowPassFilterAlpha(alpha);
     }
 
 }

@@ -7,7 +7,7 @@ function updateAlpha() {
     } else if (1 > alpha) {
         alpha = 1
     }
-    accelmagic.setAlpha(alpha / 100)
+    accelmagiq.setAlpha(alpha / 100)
     basic.showNumber(alpha)
 }
 input.onButtonPressed(Button.A, function () {
@@ -22,8 +22,8 @@ input.onButtonPressed(Button.B, function () {
     alpha += 1
     updateAlpha()
 })
-let rpy: accelmagic.EulerAngles = null
-let quat: accelmagic.Quaternion = null
+let rpy: accelmagiq.EulerAngles = null
+let quat: accelmagiq.Quaternion = null
 let alpha = 0
 serial.redirectToUSB()
 serial.setBaudRate(BaudRate.BaudRate115200)
@@ -34,40 +34,40 @@ updateAlpha()
 basic.forever(function () {
 
     // RAW (North: A-button, upside-down)
-    accelmagic.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    accelmagic.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
+    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
     // // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
-    // accelmagic.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
-    // accelmagic.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
+    // accelmagiq.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
+    // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
 
     // // TILT: a tilt compensated bearing of the device (North: back side)
-    // accelmagic.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
-    // accelmagic.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
+    // accelmagiq.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
+    // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
 
 })
 
 basic.forever(function () {
 
     // estimate
-    quat = accelmagic.quatFrom(accelmagic.estimate())
+    quat = accelmagiq.quatFrom(accelmagiq.estimate())
 
     // logging - Quaternion
     serial.writeString("Q:")
-    serial.writeNumbers(accelmagic.quatAsArray(quat))
+    serial.writeNumbers(accelmagiq.quatAsArray(quat))
 
     // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
-    quat = accelmagic.multiply(quat, accelmagic.quat(0, 0.7, 0.7, 0))
+    quat = accelmagiq.multiply(quat, accelmagiq.quat(0, 0.7, 0.7, 0))
     // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
-    //quat = accelmagic.multiplyQuats(quat, accelmagic.createQuat(-0.5, 0.5, 0.5, 0.5))
+    //quat = accelmagiq.multiplyQuats(quat, accelmagiq.createQuat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
-    rpy = accelmagic.rpyFromQuat(quat)
+    rpy = accelmagiq.rpyFromQuat(quat)
 
-    serial.writeValue("A", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Azimuth)))
-    serial.writeValue("Y", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Yaw)))
-    serial.writeValue("P", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Pitch)))
-    serial.writeValue("R", accelmagic.intDeg(accelmagic.angle(rpy, AngleRPY.Roll)))
+    serial.writeValue("A", accelmagiq.intDeg(accelmagiq.angle(rpy, AngleRPY.Azimuth)))
+    serial.writeValue("Y", accelmagiq.intDeg(accelmagiq.angle(rpy, AngleRPY.Yaw)))
+    serial.writeValue("P", accelmagiq.intDeg(accelmagiq.angle(rpy, AngleRPY.Pitch)))
+    serial.writeValue("R", accelmagiq.intDeg(accelmagiq.angle(rpy, AngleRPY.Roll)))
 
     basic.pause(200)
 })
