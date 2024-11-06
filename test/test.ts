@@ -34,10 +34,6 @@ accelmagiq.setEstimateMethod(accelmagiq.EstimationMethod.FAMC)
 
 basic.forever(function () {
 
-    // RAW (North: A-button, upside-down)
-    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
-
     // // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
     // accelmagiq.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
     // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
@@ -45,6 +41,10 @@ basic.forever(function () {
     // // TILT: a tilt compensated bearing of the device (North: back side)
     // accelmagiq.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
     // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
+
+    // RAW (North: A-button, upside-down)
+    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
 })
 
