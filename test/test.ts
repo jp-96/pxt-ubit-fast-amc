@@ -30,6 +30,7 @@ serial.setBaudRate(BaudRate.BaudRate115200)
 basic.showString("AccelMagiQ!")
 alpha = 4
 updateAlpha()
+accelmagiq.setEstimateMethod(accelmagiq.EstimationMethod.FAMC)
 
 basic.forever(function () {
 

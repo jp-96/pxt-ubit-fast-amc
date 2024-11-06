@@ -24,6 +24,12 @@ namespace accelmagiq_
     }
 
     //%
+    void setEstimateMethod(int method)
+    {
+        instance().setEstimateMethod(method);
+    }
+
+    //%
     void updateAcceleration(TNumber accX, TNumber accY, TNumber accZ)
     {
         instance().accelerometerUpdate(toDouble(accX), toDouble(accY), toDouble(accZ));

@@ -22,6 +22,15 @@ namespace accelmagiq_ {
         alpha_ = alpha;
     }
 
+    // method for simulator
+    let method_ = 0;
+
+    //% shim=accelmagiq_::setEstimateMethod
+    export function setEstimateMethod(method: number): void {
+        // for simulator
+        method_ = method;
+    }
+
     //% shim=accelmagiq_::updateAcceleration
     export function updateAcceleration(x: number, y: number, z: number): void {
         // for simulator

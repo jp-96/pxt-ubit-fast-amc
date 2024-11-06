@@ -17,6 +17,22 @@
 //% groups="['Quaternion', 'EulerAngles', 'Sensor']"
 namespace accelmagiq {
 
+    /** 
+     * Define the EstimationMethod enum
+     */
+    export enum EstimationMethod {
+        /**
+         * FAMC estimation method
+         */
+        //% block="FAMC(Default)"
+        FAMC = 0,
+        /**
+         * SIMPLE estimation method
+         */
+        //% block="Simple"
+        SIMPLE = 1
+    }
+
     /**
      * Updates the acceleration values.
      * @param x X-axis acceleration
@@ -64,8 +80,20 @@ namespace accelmagiq {
     //% weight=140
     //% alpha.defl=0.8
     //% advanced=true
-    export function setAlpha(alpha: number = 0.8): void {
+    export function setAlpha(alpha: number): void {
         accelmagiq_.setLowPassFilterAlpha(alpha);
+    }
+
+    /**
+     * Sets the estimation method.
+     */
+    //% block="set estimate method %method"
+    //% group="Sensor"
+    //% weight=130
+    //% method.defl=0
+    //% advanced=true
+    export function setEstimateMethod(method: EstimationMethod): void {
+        accelmagiq_.setEstimateMethod(method);
     }
 
 }
