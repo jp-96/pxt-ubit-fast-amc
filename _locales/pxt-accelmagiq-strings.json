@@ -30,7 +30,7 @@
   "accelmagiq.updateMag|block": "Update Magnetic force X %x Y %y Z %z",
   "accelmagiq|block": "AccelMagiQ",
   "{id:category}Accelmagiq": "Accelmagiq",
-  "{id:category}Accelmagiqfamc_": "Accelmagiqfamc_",
+  "{id:category}Accelmagiq_": "Accelmagiq_",
   "{id:group}EulerAngles": "EulerAngles",
   "{id:group}Quaternion": "Quaternion",
   "{id:group}Sensor": "Sensor"

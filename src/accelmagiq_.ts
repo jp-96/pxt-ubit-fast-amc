@@ -1,11 +1,11 @@
-namespace accelmagiqfamc_ {
+namespace accelmagiq_ {
 
-    // Accelerration (normalized)
+    // Accelerration (normalized) for simulator
     let ax = 0.0;
     let ay = 0.0;
     let az = 1.0;
 
-    // Magnetic force (normalized)
+    // Magnetic force (normalized) for simulator
     let mx = 1.0;
     let my = 0.0;
     let mz = 0.0;
@@ -13,15 +13,18 @@ namespace accelmagiqfamc_ {
     // Quaternion for simulator
     let q_ = [1.0, 0.0, 0.0, 0.0];
 
+    // alpha for simulator
     let alpha_ = 1.0;
 
-    //% shim=accelmagiqfamc_::setLowPassFilterAlpha
+    //% shim=accelmagiq_::setLowPassFilterAlpha
     export function setLowPassFilterAlpha(alpha: number): void {
+        // for simulator
         alpha_ = alpha;
     }
 
-    //% shim=accelmagiqfamc_::updateAcceleration
+    //% shim=accelmagiq_::updateAcceleration
     export function updateAcceleration(x: number, y: number, z: number): void {
+        // for simulator
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
             norm = 1 / norm;
@@ -31,8 +34,9 @@ namespace accelmagiqfamc_ {
         }
     }
 
-    //% shim=accelmagiqfamc_::updateMagneticForce
+    //% shim=accelmagiq_::updateMagneticForce
     export function updateMagneticForce(x: number, y: number, z: number): void {
+        // for simulator
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
             norm = 1 / norm;
@@ -42,8 +46,9 @@ namespace accelmagiqfamc_ {
         }
     }
 
-    function simuEstimate(): void {
-        // Accelerration Only for simulator
+    //% shim=accelmagiq_::estimate
+    export function estimate(): void {
+        // for simulator
         let w = Math.sqrt((az + 1.0) / 2.0)
         let x = ay / (2.0 * w)
         let y = -ax / (2.0 * w)
@@ -59,29 +64,27 @@ namespace accelmagiqfamc_ {
         }
     }
 
-    //% shim=accelmagiqfamc_::estimate
-    export function estimate(): void {
-        // for simulator
-        simuEstimate();
-    }
-
-    //% shim=accelmagiqfamc_::getW
+    //% shim=accelmagiq_::getW
     export function getW(): number {
+        // for simulator
         return q_[0];
     }
 
-    //% shim=accelmagiqfamc_::getX
+    //% shim=accelmagiq_::getX
     export function getX(): number {
+        // for simulator
         return q_[1];
     }
 
-    //% shim=accelmagiqfamc_::getY
+    //% shim=accelmagiq_::getY
     export function getY(): number {
+        // for simulator
         return q_[2];
     }
 
-    //% shim=accelmagiqfamc_::getZ
+    //% shim=accelmagiq_::getZ
     export function getZ(): number {
+        // for simulator
         return q_[3];
     }
 

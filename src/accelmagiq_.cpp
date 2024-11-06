@@ -1,20 +1,20 @@
 #include "pxt.h"
-#include "lib/LowPassFilter.h"
+#include "lib/AccelMagiQLibLowPassFilter.h"
 
-namespace accelmagiqfamc_
+namespace accelmagiq_
 {
 
     static const double DEFAULT_ALPHA = 0.8;
 
     // Accelerration filter
-    LowPassFilter filterAx(DEFAULT_ALPHA);
-    LowPassFilter filterAy(DEFAULT_ALPHA);
-    LowPassFilter filterAz(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterAx(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterAy(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterAz(DEFAULT_ALPHA);
 
     // Magnetic force filter
-    LowPassFilter filterMx(DEFAULT_ALPHA);
-    LowPassFilter filterMy(DEFAULT_ALPHA);
-    LowPassFilter filterMz(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterMx(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterMy(DEFAULT_ALPHA);
+    accelmagiqlib::LowPassFilter filterMz(DEFAULT_ALPHA);
 
     // Accelerration (normalized)
     double ax = 0.0;

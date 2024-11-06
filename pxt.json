@@ -6,12 +6,14 @@
         "core": "*"
     },
     "files": [
-        "src/lib/LowPassFilter.h",
-        "src/lib/LowPassFilter.cpp",
-        "src/accelmagiqfamc_.ts",
-        "src/accelmagiqfamc_.cpp",
-        "src/accelmagiq.estimate.ts",
+        "src/lib/AccelMagiQLibLowPassFilter.h",
+        "src/lib/AccelMagiQLibLowPassFilter.cpp",
+        "src/lib/AccelMagiQLibQuaternionEstimator.h",
+        "src/lib/AccelMagiQLibQuaternionEstimator.cpp",
+        "src/accelmagiq_.cpp",
+        "src/accelmagiq_.ts",
         "src/accelmagiq.ts",
+        "src/accelmagiq.ex.ts",
         "enums.d.ts",
         "shims.d.ts",
         "README.md"
