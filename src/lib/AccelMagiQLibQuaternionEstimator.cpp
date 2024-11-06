@@ -3,31 +3,82 @@
 
 using namespace accelmagiqlib;
 
-QuaternionEstimator::QuaternionEstimator(const double newAlpha)
-    : filterAx(newAlpha), filterAy(newAlpha), filterAz(newAlpha),
-      filterMx(newAlpha), filterMy(newAlpha), filterMz(newAlpha),
+/**
+ * Constructor
+ *
+ * Initializes the quaternion estimator with a specified alpha value for the low pass filters.
+ *
+ * @param alpha The alpha value for the low pass filters. Default is 0.8.
+ */
+QuaternionEstimator::QuaternionEstimator(const double alpha)
+    : filterAx(alpha), filterAy(alpha), filterAz(alpha),
+      filterMx(alpha), filterMy(alpha), filterMz(alpha),
       currentMethod(0) {}
 
-double QuaternionEstimator::getQw() const
+/**
+ * Get the W component of the quaternion
+ *
+ * @return The W component of the quaternion
+ */
+double QuaternionEstimator::getW() const
 {
     return qw;
 }
 
-double QuaternionEstimator::getQx() const
+/**
+ * Get the X component of the quaternion
+ *
+ * @return The X component of the quaternion
+ */
+double QuaternionEstimator::getX() const
 {
     return qx;
 }
 
-double QuaternionEstimator::getQy() const
+/**
+ * Get the Y component of the quaternion
+ *
+ * @return The Y component of the quaternion
+ */
+double QuaternionEstimator::getY() const
 {
     return qy;
 }
 
-double QuaternionEstimator::getQz() const
+/**
+ * Get the Z component of the quaternion
+ *
+ * @return The Z component of the quaternion
+ */
+double QuaternionEstimator::getZ() const
 {
     return qz;
 }
 
+/**
+ * Set the alpha value for the low pass filters
+ *
+ * @param alpha The new alpha value. Should be in the range of 0.0 to 1.0.
+ */
+void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
+{
+    filterAx.setAlpha(alpha);
+    filterAy.setAlpha(alpha);
+    filterAz.setAlpha(alpha);
+    filterMx.setAlpha(alpha);
+    filterMy.setAlpha(alpha);
+    filterMz.setAlpha(alpha);
+}
+
+/**
+ * Update the accelerometer data
+ *
+ * This function updates and normalizes the accelerometer data.
+ *
+ * @param x The X component of the accelerometer data
+ * @param y The Y component of the accelerometer data
+ * @param z The Z component of the accelerometer data
+ */
 void QuaternionEstimator::accelerometerUpdate(const double x, const double y, const double z)
 {
     // Update and normalize accelerometer data
@@ -43,6 +94,15 @@ void QuaternionEstimator::accelerometerUpdate(const double x, const double y, co
     }
 }
 
+/**
+ * Update the magnetometer data
+ *
+ * This function updates and normalizes the magnetometer data.
+ *
+ * @param x The X component of the magnetometer data
+ * @param y The Y component of the magnetometer data
+ * @param z The Z component of the magnetometer data
+ */
 void QuaternionEstimator::magnetometerUpdate(const double x, const double y, const double z)
 {
     // Update and normalize magnetometer data
@@ -58,11 +118,21 @@ void QuaternionEstimator::magnetometerUpdate(const double x, const double y, con
     }
 }
 
+/**
+ * Set the method used for quaternion estimation
+ *
+ * @param method The method identifier to use for estimation
+ */
 void QuaternionEstimator::setEstimateMethod(const int method)
 {
     currentMethod = method;
 }
 
+/**
+ * Perform the quaternion estimation
+ *
+ * This function calculates the quaternion based on the current sensor data and the selected estimation method.
+ */
 void QuaternionEstimator::estimate()
 {
     if (currentMethod == 0)
@@ -75,6 +145,9 @@ void QuaternionEstimator::estimate()
     }
 }
 
+/**
+ * Estimate the quaternion using the Fast Accelerometer-Magnetometer Combination (FAMC) algorithm
+ */
 void QuaternionEstimator::estimateFamc()
 {
     // ---------------------------------------------------------------------------------------------
@@ -132,7 +205,7 @@ void QuaternionEstimator::estimateFamc()
     double y = b1 - b2 - b3;
     double z = c1 - c2 - c3;
 
-    // normalize
+    // Normalize the quaternion
     double norm = sqrt(w * w + x * x + y * y + z * z);
     if (0 < norm)
     {
@@ -144,6 +217,9 @@ void QuaternionEstimator::estimateFamc()
     }
 }
 
+/**
+ * Estimate the quaternion using a simple method
+ */
 void QuaternionEstimator::estimateSimple()
 {
     // Accelerration Only
