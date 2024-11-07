@@ -50,8 +50,8 @@ namespace accelmagiq_ {
         sampling_ = false;
     }
 
+    // for simulator
     function readAcceleration(): void {
-        // for simulator
         const x = input.acceleration(Dimension.X);
         const y = input.acceleration(Dimension.Y);
         const z = input.acceleration(Dimension.Z);

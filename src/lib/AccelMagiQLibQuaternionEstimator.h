@@ -12,82 +12,86 @@ namespace accelmagiqlib
     const int ESTIMATION_METHOD_SIMPLE = 1; /**< Simple method */
 
     /**
-     * QuaternionEstimator class
-     *
-     * This class estimates quaternion orientation based on accelerometer and magnetometer data.
+     * @class QuaternionEstimator
+     * @brief This class estimates quaternion orientation based on accelerometer and magnetometer data.
      */
     class QuaternionEstimator
     {
     public:
         /**
-         * Constructor
+         * @brief Constructor to initialize the QuaternionEstimator.
          */
-        QuaternionEstimator() : currentMethod(ESTIMATION_METHOD_FAMC), isSampling(false) {}
+        QuaternionEstimator()
+            : currentMethod(ESTIMATION_METHOD_FAMC),
+              isSampling(false),
+              filterAccel(), filterMagne(),
+              qw(1.0), qx(0.0), qy(0.0), qz(0.0) {}
 
         // Getters for quaternion components
         /**
-         * @brief Get the W component of the quaternion
-         *
-         * @return The W component of the quaternion
+         * @brief Get the W component of the quaternion.
+         * @return The W component of the quaternion.
          */
         double getW() const;
 
         /**
-         * @brief Get the X component of the quaternion
-         *
-         * @return The X component of the quaternion
+         * @brief Get the X component of the quaternion.
+         * @return The X component of the quaternion.
          */
         double getX() const;
 
         /**
-         * @brief Get the Y component of the quaternion
-         *
-         * @return The Y component of the quaternion
+         * @brief Get the Y component of the quaternion.
+         * @return The Y component of the quaternion.
          */
         double getY() const;
 
         /**
-         * @brief Get the Z component of the quaternion
-         *
-         * @return The Z component of the quaternion
+         * @brief Get the Z component of the quaternion.
+         * @return The Z component of the quaternion.
          */
         double getZ() const;
 
         /**
-         * @brief Set the alpha value for the low pass filters
-         *
+         * @brief Set the alpha value for the low-pass filters.
          * @param alpha The new alpha value. Should be in the range of 0.0 to 1.0.
          */
         void setLowPassFilterAlpha(const double alpha);
 
+        /**
+         * @brief Resume sampling sensor data.
+         */
         void resumeSampling();
 
+        /**
+         * @brief Pause sampling sensor data.
+         */
         void pauseSampling();
 
     private:
-        bool isSampling;
+        bool isSampling; /**< Indicates whether the sampling of sensor data is active */
 
         /**
-         * Accelerometer update callback
+         * @brief Callback for accelerometer updates.
+         * @param e The MicroBitEvent triggered by the accelerometer.
          */
         void accelerometerUpdateHandler(MicroBitEvent e);
 
         /**
-         * Magnetometer update callback
+         * @brief Callback for magnetometer updates.
+         * @param e The MicroBitEvent triggered by the magnetometer.
          */
         void magnetometerUpdateHandler(MicroBitEvent e);
 
     public:
         /**
-         * @brief Set the method used for quaternion estimation
-         *
-         * @param method The method identifier to use for estimation: 0-FAMC, 1-SIMPLE
+         * @brief Set the method used for quaternion estimation.
+         * @param method The method identifier to use for estimation: 0-FAMC, 1-SIMPLE.
          */
         void setEstimateMethod(const int method);
 
         /**
          * @brief Sets the coordinate system for the filter.
-         *
          * @param system The coordinate system to use:
          *               - COORDINATE_SYSTEM_BASIC: 0
          *               - COORDINATE_SYSTEM_TILT: 1
@@ -96,7 +100,7 @@ namespace accelmagiqlib
         void setCoordinateSystem(const int system);
 
         /**
-         * @brief Perform the quaternion estimation
+         * @brief Perform the quaternion estimation.
          *
          * This function calculates the quaternion based on the current sensor data and the selected estimation method.
          */
@@ -104,29 +108,29 @@ namespace accelmagiqlib
 
     private:
         /**
-         * @brief Estimate the quaternion using the Fast Accelerometer-Magnetometer Combination (FAMC) algorithm
+         * @brief Estimate the quaternion using the Fast Accelerometer-Magnetometer Combination (FAMC) algorithm.
          */
         void estimateFamc();
 
         /**
-         * @brief Estimate the quaternion using a simple method
+         * @brief Estimate the quaternion using a simple method.
          */
         void estimateSimple();
 
         // Estimation method
-        int currentMethod; /**< The currently selected method identifier to use for estimation: 0-FAMC, 1-SIMPLE*/
+        int currentMethod; /**< The currently selected method identifier to use for estimation: 0-FAMC, 1-SIMPLE */
 
         // Acceleration filter
-        CoordinateSpaceFilter filterAccel;
+        CoordinateSpaceFilter filterAccel; /**< Filter for accelerometer data */
 
         // Magnetic force filter
-        CoordinateSpaceFilter filterMagne;
+        CoordinateSpaceFilter filterMagne; /**< Filter for magnetometer data */
 
         // Quaternion (normalized)
-        double qw = 1.0; /**< W component of the quaternion */
-        double qx = 0.0; /**< X component of the quaternion */
-        double qy = 0.0; /**< Y component of the quaternion */
-        double qz = 0.0; /**< Z component of the quaternion */
+        double qw; /**< W component of the quaternion */
+        double qx; /**< X component of the quaternion */
+        double qy; /**< Y component of the quaternion */
+        double qz; /**< Z component of the quaternion */
     };
 
 } // namespace accelmagiqlib

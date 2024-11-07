@@ -9,7 +9,7 @@
   "AngleRPY.Yaw|block": "Yaw",
   "accelmagiq.CoordinateSystem.BASIC": "BASIC: a non-tilt compensated bearing of the device (North: logo mark)",
   "accelmagiq.CoordinateSystem.BASIC|block": "BASIC",
-  "accelmagiq.CoordinateSystem.RAW": "RAW (North: A-button, upside-down)",
+  "accelmagiq.CoordinateSystem.RAW": "RAW: a raw coordinate system (North: A-button, upside-down)",
   "accelmagiq.CoordinateSystem.RAW|block": "RAW",
   "accelmagiq.CoordinateSystem.TILT": "TILT: a tilt compensated bearing of the device (North: back side)",
   "accelmagiq.CoordinateSystem.TILT|block": "TILT",
