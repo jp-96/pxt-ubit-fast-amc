@@ -30,6 +30,8 @@ serial.setBaudRate(BaudRate.BaudRate115200)
 basic.showString("AccelMagiQ!")
 alpha = 4
 updateAlpha()
+accelmagiq.setEstimateMethod(accelmagiq.EstimationMethod.FAMC)
+accelmagiq.setCoordinateSystem(accelmagiq.CoordinateSystem.BASIC)
 
 basic.forever(function () {
 
@@ -56,10 +58,10 @@ basic.forever(function () {
     serial.writeString("Q:")
     serial.writeNumbers(accelmagiq.quatAsArray(quat))
 
-    // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
-    quat = accelmagiq.multiply(quat, accelmagiq.quat(0, 0.7, 0.7, 0))
-    // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
-    //quat = accelmagiq.multiplyQuats(quat, accelmagiq.createQuat(-0.5, 0.5, 0.5, 0.5))
+    // // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
+    // quat = accelmagiq.multiply(quat, accelmagiq.quat(0, 0.7, 0.7, 0))
+    // // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
+    // quat = accelmagiq.multiply(quat, accelmagiq.quat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
     rpy = accelmagiq.rpyFromQuat(quat)
