@@ -38,13 +38,13 @@ namespace accelmagiq_
     //%
     void updateAcceleration(TNumber accX, TNumber accY, TNumber accZ)
     {
-        instance().accelerometerUpdate(toDouble(accX), toDouble(accY), toDouble(accZ));
+        instance().updateAccelerometerData(toDouble(accX), toDouble(accY), toDouble(accZ));
     }
 
     //%
     void updateMagneticForce(TNumber magX, TNumber magY, TNumber magZ)
     {
-        instance().magnetometerUpdate(toDouble(magX), toDouble(magY), toDouble(magZ));
+        instance().updateMagnetometerData(toDouble(magX), toDouble(magY), toDouble(magZ));
     }
 
     //%

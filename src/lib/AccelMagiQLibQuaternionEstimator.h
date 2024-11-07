@@ -1,6 +1,7 @@
 #ifndef ACCELMAGIQLIB_QUATERNIONESTIMATOR_H
 #define ACCELMAGIQLIB_QUATERNIONESTIMATOR_H
 
+#include "pxt.h"
 #include "AccelMagiQLibCoordinateSpaceFilter.h"
 
 namespace accelmagiqlib
@@ -22,7 +23,10 @@ namespace accelmagiqlib
          * Constructor
          */
         QuaternionEstimator()
-            : currentMethod(ESTIMATION_METHOD_FAMC) {}
+            : currentMethod(ESTIMATION_METHOD_FAMC), isSampling(false)
+        {
+            resumeSampling();
+        }
 
         // Getters for quaternion components
         /**
@@ -60,6 +64,15 @@ namespace accelmagiqlib
          */
         void setLowPassFilterAlpha(const double alpha);
 
+        void resumeSampling();
+
+        void pauseSampling();
+
+    private:
+        bool isSampling;
+        void accelerometerUpdateHandler(MicroBitEvent e);
+
+    public:
         // Update functions
         /**
          * @brief Update the accelerometer data
@@ -70,7 +83,7 @@ namespace accelmagiqlib
          * @param y The Y component of the accelerometer data
          * @param z The Z component of the accelerometer data
          */
-        void accelerometerUpdate(const double x, const double y, const double z);
+        void updateAccelerometerData(const double x, const double y, const double z);
 
         /**
          * @brief Update the magnetometer data
@@ -81,7 +94,7 @@ namespace accelmagiqlib
          * @param y The Y component of the magnetometer data
          * @param z The Z component of the magnetometer data
          */
-        void magnetometerUpdate(const double x, const double y, const double z);
+        void updateMagnetometerData(const double x, const double y, const double z);
 
         /**
          * @brief Set the method used for quaternion estimation

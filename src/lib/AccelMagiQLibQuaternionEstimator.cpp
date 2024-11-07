@@ -54,6 +54,38 @@ void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
     filterMagne.setAlpha(alpha);
 }
 
+void QuaternionEstimator::resumeSampling()
+{
+    if ((EventModel::defaultEventBus) && (!isSampling))
+    {
+        isSampling = true;
+        EventModel::defaultEventBus->listen(
+            MICROBIT_ID_ACCELEROMETER, MICROBIT_ACCELEROMETER_EVT_DATA_UPDATE,
+            this, &QuaternionEstimator::accelerometerUpdateHandler,
+            MESSAGE_BUS_LISTENER_IMMEDIATE);
+    }
+}
+
+void QuaternionEstimator::pauseSampling()
+{
+    if ((EventModel::defaultEventBus) && (isSampling))
+    {
+        EventModel::defaultEventBus->ignore(
+            MICROBIT_ID_ACCELEROMETER, MICROBIT_ACCELEROMETER_EVT_DATA_UPDATE,
+            this, &QuaternionEstimator::accelerometerUpdateHandler);
+        isSampling = false;
+    }
+}
+
+void QuaternionEstimator::accelerometerUpdateHandler(MicroBitEvent e)
+{
+    // Update and normalize accelerometer data
+    double x = uBit.accelerometer.getX();
+    double y = uBit.accelerometer.getY();
+    double z = uBit.accelerometer.getZ();
+    updateAccelerometerData(x, y, z);
+}
+
 /**
  * Update the accelerometer data
  *
@@ -63,7 +95,7 @@ void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
  * @param y The Y component of the accelerometer data
  * @param z The Z component of the accelerometer data
  */
-void QuaternionEstimator::accelerometerUpdate(const double x, const double y, const double z)
+void QuaternionEstimator::updateAccelerometerData(const double x, const double y, const double z)
 {
     // Update and normalize accelerometer data
     filterAccel.update(x, y, z);
@@ -78,7 +110,7 @@ void QuaternionEstimator::accelerometerUpdate(const double x, const double y, co
  * @param y The Y component of the magnetometer data
  * @param z The Z component of the magnetometer data
  */
-void QuaternionEstimator::magnetometerUpdate(const double x, const double y, const double z)
+void QuaternionEstimator::updateMagnetometerData(const double x, const double y, const double z)
 {
     // Update and normalize magnetometer data
     filterMagne.update(x, y, z);
