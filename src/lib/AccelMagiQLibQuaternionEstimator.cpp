@@ -105,7 +105,7 @@ void QuaternionEstimator::setCoordinateSystem(const int system)
  */
 void QuaternionEstimator::estimate()
 {
-    if (currentMethod == 0)
+    if (ESTIMATION_METHOD_FAMC == currentMethod)
     {
         estimateFamc();
     }

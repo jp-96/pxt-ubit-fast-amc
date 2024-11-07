@@ -8,8 +8,6 @@
     "files": [
         "src/lib/AccelMagiQLibCoordinateSpaceFilter.h",
         "src/lib/AccelMagiQLibCoordinateSpaceFilter.cpp",
-        "src/lib/AccelMagiQLibLowPassFilter.h",
-        "src/lib/AccelMagiQLibLowPassFilter.cpp",
         "src/lib/AccelMagiQLibQuaternionEstimator.h",
         "src/lib/AccelMagiQLibQuaternionEstimator.cpp",
         "src/accelmagiq_.cpp",

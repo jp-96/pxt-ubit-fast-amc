@@ -1,14 +1,14 @@
 namespace accelmagiq_ {
 
     // Accelerration (normalized) for simulator
-    let ax = 0.0;
-    let ay = 0.0;
-    let az = 1.0;
+    let rawAx = 1.0;
+    let rawAy = 0.0;
+    let rawAz = 0.0;
 
     // Magnetic force (normalized) for simulator
-    let mx = 1.0;
-    let my = 0.0;
-    let mz = 0.0;
+    let rawMx = 1.0;
+    let rawMy = 0.0;
+    let rawMz = 0.0;
 
     // Quaternion for simulator
     let q_ = [1.0, 0.0, 0.0, 0.0];
@@ -46,9 +46,9 @@ namespace accelmagiq_ {
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
             norm = 1 / norm;
-            ax = x * norm;
-            ay = y * norm;
-            az = z * norm;
+            rawAx = x * norm;
+            rawAy = y * norm;
+            rawAz = z * norm;
         }
     }
 
@@ -58,15 +58,19 @@ namespace accelmagiq_ {
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
             norm = 1 / norm;
-            mx = x * norm;
-            my = y * norm;
-            mz = z * norm;
+            rawMx = x * norm;
+            rawMy = y * norm;
+            rawMz = z * norm;
         }
     }
 
     //% shim=accelmagiq_::estimate
     export function estimate(): void {
         // for simulator
+        const ax = rawAy;
+        const ay = rawAx;
+        const az = -rawAz;
+
         let w = Math.sqrt((az + 1.0) / 2.0)
         let x = ay / (2.0 * w)
         let y = -ax / (2.0 * w)

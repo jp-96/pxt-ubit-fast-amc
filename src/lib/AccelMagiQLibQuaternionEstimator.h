@@ -6,6 +6,10 @@
 namespace accelmagiqlib
 {
 
+    // The method identifier to use for estimation: 0-FAMC, 1-SIMPLE
+    const int ESTIMATION_METHOD_FAMC = 0;   /**< FAMC method */
+    const int ESTIMATION_METHOD_SIMPLE = 1; /**< Simple method */
+
     /**
      * QuaternionEstimator class
      *
@@ -16,13 +20,9 @@ namespace accelmagiqlib
     public:
         /**
          * Constructor
-         *
-         * Initializes the quaternion estimator with a specified alpha value for the low pass filters.
-         *
-         * @param alpha The alpha value for the low pass filters. Default is 0.8.
          */
-        QuaternionEstimator(const double alpha = CoordinateSpaceFilter::DEFAULT_ALPHA)
-            : currentMethod(0) {}
+        QuaternionEstimator()
+            : currentMethod(ESTIMATION_METHOD_FAMC) {}
 
         // Getters for quaternion components
         /**
