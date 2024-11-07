@@ -70,7 +70,16 @@ namespace accelmagiqlib
 
     private:
         bool isSampling;
+
+        /**
+         * Accelerometer update callback
+         */
         void accelerometerUpdateHandler(MicroBitEvent e);
+
+        /**
+         * Magnetometer update callback
+         */
+        void magnetometerUpdateHandler(MicroBitEvent e);
 
     public:
         // Update functions

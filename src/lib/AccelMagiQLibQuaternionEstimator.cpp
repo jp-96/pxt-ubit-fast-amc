@@ -56,24 +56,35 @@ void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
 
 void QuaternionEstimator::resumeSampling()
 {
-    if ((EventModel::defaultEventBus) && (!isSampling))
+    if (isSampling)
+        return;
+    isSampling = true;
+    if (EventModel::defaultEventBus)
     {
-        isSampling = true;
         EventModel::defaultEventBus->listen(
             MICROBIT_ID_ACCELEROMETER, MICROBIT_ACCELEROMETER_EVT_DATA_UPDATE,
             this, &QuaternionEstimator::accelerometerUpdateHandler,
-            MESSAGE_BUS_LISTENER_IMMEDIATE);
+            MESSAGE_BUS_LISTENER_DROP_IF_BUSY /** MAY BE DROPPED */);
+        EventModel::defaultEventBus->listen(
+            MICROBIT_ID_COMPASS, MICROBIT_COMPASS_EVT_DATA_UPDATE,
+            this, &QuaternionEstimator::magnetometerUpdateHandler,
+            MESSAGE_BUS_LISTENER_DROP_IF_BUSY /** MAY BE DROPPED */);
     }
 }
 
 void QuaternionEstimator::pauseSampling()
 {
-    if ((EventModel::defaultEventBus) && (isSampling))
+    if (!isSampling)
+        return;
+    isSampling = false;
+    if (EventModel::defaultEventBus)
     {
         EventModel::defaultEventBus->ignore(
             MICROBIT_ID_ACCELEROMETER, MICROBIT_ACCELEROMETER_EVT_DATA_UPDATE,
             this, &QuaternionEstimator::accelerometerUpdateHandler);
-        isSampling = false;
+        EventModel::defaultEventBus->ignore(
+            MICROBIT_ID_COMPASS, MICROBIT_COMPASS_EVT_DATA_UPDATE,
+            this, &QuaternionEstimator::magnetometerUpdateHandler);
     }
 }
 
@@ -84,6 +95,15 @@ void QuaternionEstimator::accelerometerUpdateHandler(MicroBitEvent e)
     double y = uBit.accelerometer.getY();
     double z = uBit.accelerometer.getZ();
     updateAccelerometerData(x, y, z);
+}
+
+void QuaternionEstimator::magnetometerUpdateHandler(MicroBitEvent e)
+{
+    // Update and normalize magnetometer data
+    double x = uBit.compass.getX();
+    double y = uBit.compass.getY();
+    double z = uBit.compass.getZ();
+    updateMagnetometerData(x, y, z);
 }
 
 /**

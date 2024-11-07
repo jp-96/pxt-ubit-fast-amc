@@ -33,21 +33,21 @@ updateAlpha()
 accelmagiq.setEstimateMethod(accelmagiq.EstimationMethod.FAMC)
 accelmagiq.setCoordinateSystem(accelmagiq.CoordinateSystem.BASIC)
 
-basic.forever(function () {
+// basic.forever(function () {
 
-    // RAW (North: A-button, upside-down)
-    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
+//     // RAW (North: A-button, upside-down)
+//     accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+//     accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
-    // // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
-    // accelmagiq.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
-    // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
+//     // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
+//     accelmagiq.updateAcc(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
+//     accelmagiq.updateMag(input.magneticForce(Dimension.Y), input.magneticForce(Dimension.X), -input.magneticForce(Dimension.Z))
 
-    // // TILT: a tilt compensated bearing of the device (North: back side)
-    // accelmagiq.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
-    // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
+//     // TILT: a tilt compensated bearing of the device (North: back side)
+//     accelmagiq.updateAcc(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
+//     accelmagiq.updateMag(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
 
-})
+// })
 
 basic.forever(function () {
 
