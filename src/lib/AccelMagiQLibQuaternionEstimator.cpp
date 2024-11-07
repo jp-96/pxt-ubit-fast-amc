@@ -4,18 +4,6 @@
 using namespace accelmagiqlib;
 
 /**
- * Constructor
- *
- * Initializes the quaternion estimator with a specified alpha value for the low pass filters.
- *
- * @param alpha The alpha value for the low pass filters. Default is 0.8.
- */
-QuaternionEstimator::QuaternionEstimator(const double alpha)
-    : filterAx(alpha), filterAy(alpha), filterAz(alpha),
-      filterMx(alpha), filterMy(alpha), filterMz(alpha),
-      currentMethod(0) {}
-
-/**
  * Get the W component of the quaternion
  *
  * @return The W component of the quaternion
@@ -62,12 +50,8 @@ double QuaternionEstimator::getZ() const
  */
 void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
 {
-    filterAx.setAlpha(alpha);
-    filterAy.setAlpha(alpha);
-    filterAz.setAlpha(alpha);
-    filterMx.setAlpha(alpha);
-    filterMy.setAlpha(alpha);
-    filterMz.setAlpha(alpha);
+    filterAccel.setAlpha(alpha);
+    filterMagne.setAlpha(alpha);
 }
 
 /**
@@ -82,16 +66,7 @@ void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
 void QuaternionEstimator::accelerometerUpdate(const double x, const double y, const double z)
 {
     // Update and normalize accelerometer data
-    ax = filterAx.filter(x);
-    ay = filterAy.filter(y);
-    az = filterAz.filter(z);
-    double normA = std::sqrt(ax * ax + ay * ay + az * az);
-    if (normA > 0.0)
-    {
-        ax /= normA;
-        ay /= normA;
-        az /= normA;
-    }
+    filterAccel.update(x, y, z);
 }
 
 /**
@@ -106,16 +81,7 @@ void QuaternionEstimator::accelerometerUpdate(const double x, const double y, co
 void QuaternionEstimator::magnetometerUpdate(const double x, const double y, const double z)
 {
     // Update and normalize magnetometer data
-    mx = filterMx.filter(x);
-    my = filterMy.filter(y);
-    mz = filterMz.filter(z);
-    double normM = std::sqrt(mx * mx + my * my + mz * mz);
-    if (normM > 0.0)
-    {
-        mx /= normM;
-        my /= normM;
-        mz /= normM;
-    }
+    filterMagne.update(x, y, z);
 }
 
 /**
@@ -127,7 +93,11 @@ void QuaternionEstimator::setEstimateMethod(const int method)
 {
     currentMethod = method;
 }
-
+void QuaternionEstimator::setCoordinateSystem(const int system)
+{
+    filterAccel.setCoordinateSystem(system);
+    filterMagne.setCoordinateSystem(system);
+}
 /**
  * Perform the quaternion estimation
  *
@@ -150,6 +120,13 @@ void QuaternionEstimator::estimate()
  */
 void QuaternionEstimator::estimateFamc()
 {
+    const double ax = filterAccel.getX();
+    const double ay = filterAccel.getY();
+    const double az = filterAccel.getZ();
+    const double mx = filterMagne.getX();
+    const double my = filterMagne.getY();
+    const double mz = filterMagne.getZ();
+
     // ---------------------------------------------------------------------------------------------
     // A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer
     // Fast Accelerometer-Magnetometer Combination (FAMC) algorithm by Zhuohua Liu and Jin Wu
@@ -222,6 +199,10 @@ void QuaternionEstimator::estimateFamc()
  */
 void QuaternionEstimator::estimateSimple()
 {
+    const double ax = filterAccel.getX();
+    const double ay = filterAccel.getY();
+    const double az = filterAccel.getZ();
+
     // Accelerration Only
     double w = std::sqrt((az + 1.0) / 2.0);
     double x = ay / (2.0 * w);

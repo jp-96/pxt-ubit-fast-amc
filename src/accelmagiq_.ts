@@ -13,6 +13,15 @@ namespace accelmagiq_ {
     // Quaternion for simulator
     let q_ = [1.0, 0.0, 0.0, 0.0];
 
+    // coordinateSystem for simulator
+    let coordinateSystem_ = 0;
+
+    //% shim=accelmagiq_::setCoordinateSystem
+    export function setCoordinateSystem(system: number) {
+        // alpha for simulator
+        coordinateSystem_ = system;
+    }
+
     // alpha for simulator
     let alpha_ = 1.0;
 

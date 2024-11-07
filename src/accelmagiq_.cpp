@@ -18,6 +18,12 @@ namespace accelmagiq_
 {
 
     //%
+    void setCoordinateSystem(int system)
+    {
+        instance().setCoordinateSystem(system);
+    }
+
+    //%
     void setLowPassFilterAlpha(TNumber alpha)
     {
         instance().setLowPassFilterAlpha(toDouble(alpha));

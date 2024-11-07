@@ -14,8 +14,6 @@ namespace accelmagiqlib
     class CoordinateSpaceFilter
     {
     private:
-        static constexpr double DEFAULT_ALPHA = 0.8;
-
         int currentSystem;
 
         // low-pass filter
@@ -35,6 +33,8 @@ namespace accelmagiqlib
         double rawZ;
 
     public:
+        static constexpr double DEFAULT_ALPHA = 0.8;
+
         /**
          * Constructor to initialize the CoordinateSpaceFilter with initial coordinates
          * and an optional alpha value for the low-pass filter.
@@ -48,7 +48,8 @@ namespace accelmagiqlib
          *               - COORD_SYSTEM_RAW: 2
          * @param alpha Alpha value for the low-pass filter (default is 0.8).
          */
-        CoordinateSpaceFilter(double x = 0.0, double y = 0.0, double z = 0.0, int system = COORDINATE_SYSTEM_BASIC, double alpha = DEFAULT_ALPHA)
+        CoordinateSpaceFilter(const double x = 0.0, const double y = 0.0, const double z = 0.0,
+                              const int system = COORDINATE_SYSTEM_BASIC, const double alpha = DEFAULT_ALPHA)
             : currentSystem(system),
               alphaX(alpha), oneMinusAlphaX(1.0 - alpha),
               alphaY(alpha), oneMinusAlphaY(1.0 - alpha),
@@ -67,7 +68,7 @@ namespace accelmagiqlib
          *               - COORD_SYSTEM_TILT: 1
          *               - COORD_SYSTEM_RAW: 2
          */
-        void setCoordinateSystem(int system);
+        void setCoordinateSystem(const int system);
 
         /**
          * Gets the X coordinate based on the current coordinate system.
@@ -93,18 +94,18 @@ namespace accelmagiqlib
         /**
          * Updates the coordinate values with new data.
          *
-         * @param newX The new X value.
-         * @param newY The new Y value.
-         * @param newZ The new Z value.
+         * @param x The new X value.
+         * @param y The new Y value.
+         * @param z The new Z value.
          */
-        void update(double newX, double newY, double newZ);
+        void update(const double x, const double y, const double z);
 
         /**
          * Sets the alpha value for the low-pass filter.
          *
          * @param alpha The new alpha value.
          */
-        void setAlpha(double alpha);
+        void setAlpha(const double alpha);
 
     private:
         /**

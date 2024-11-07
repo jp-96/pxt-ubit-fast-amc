@@ -24,13 +24,31 @@ namespace accelmagiq {
         /**
          * FAMC estimation method
          */
-        //% block="FAMC(Default)"
+        //% block="FAMC(default)"
         FAMC = 0,
         /**
          * SIMPLE estimation method
          */
         //% block="Simple"
         SIMPLE = 1
+    }
+
+    export enum CoordinateSystem {
+        /**
+         * BASIC: a non-tilt compensated bearing of the device (North: logo mark)
+         */
+        //% block="BASIC"
+        BASIC = 0,
+        /**
+         * TILT: a tilt compensated bearing of the device (North: back side)
+         */
+        //% block="TILT"
+        TILT = 1,
+        /**
+         * RAW (North: A-button, upside-down)
+         */
+        //% block="RAW"
+        RAW = 2,
     }
 
     /**
@@ -89,11 +107,23 @@ namespace accelmagiq {
      */
     //% block="set estimate method %method"
     //% group="Sensor"
-    //% weight=130
+    //% weight=131
     //% method.defl=0
     //% advanced=true
     export function setEstimateMethod(method: EstimationMethod): void {
         accelmagiq_.setEstimateMethod(method);
+    }
+
+    /**
+     * Sets the coordinate system.
+     */
+    //% block="set coordinate system %system"
+    //% group="Sensor"
+    //% weight=130
+    //% method.defl=0
+    //% advanced=true
+    export function setCoordinateSystem(system: CoordinateSystem) {
+        accelmagiq_.setCoordinateSystem(system);
     }
 
 }

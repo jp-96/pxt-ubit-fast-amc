@@ -31,8 +31,13 @@ basic.showString("AccelMagiQ!")
 alpha = 4
 updateAlpha()
 accelmagiq.setEstimateMethod(accelmagiq.EstimationMethod.FAMC)
+accelmagiq.setCoordinateSystem(accelmagiq.CoordinateSystem.BASIC)
 
 basic.forever(function () {
+
+    // RAW (North: A-button, upside-down)
+    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
+    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
     // // BASIC: a non-tilt compensated bearing of the device (North: logo mark)
     // accelmagiq.updateAcceleration(input.acceleration(Dimension.Y), input.acceleration(Dimension.X), -input.acceleration(Dimension.Z))
@@ -41,10 +46,6 @@ basic.forever(function () {
     // // TILT: a tilt compensated bearing of the device (North: back side)
     // accelmagiq.updateAcceleration(input.acceleration(Dimension.Z), input.acceleration(Dimension.X), input.acceleration(Dimension.Y))
     // accelmagiq.updateMagneticForce(input.magneticForce(Dimension.Z), input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y))
-
-    // RAW (North: A-button, upside-down)
-    accelmagiq.updateAcc(input.acceleration(Dimension.X), input.acceleration(Dimension.Y), input.acceleration(Dimension.Z))
-    accelmagiq.updateMag(input.magneticForce(Dimension.X), input.magneticForce(Dimension.Y), input.magneticForce(Dimension.Z))
 
 })
 
@@ -57,10 +58,10 @@ basic.forever(function () {
     serial.writeString("Q:")
     serial.writeNumbers(accelmagiq.quatAsArray(quat))
 
-    // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
-    quat = accelmagiq.multiply(quat, accelmagiq.quat(0, 0.7, 0.7, 0))
-    // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
-    //quat = accelmagiq.multiplyQuats(quat, accelmagiq.createQuat(-0.5, 0.5, 0.5, 0.5))
+    // // RAW --> BASIC: calculates non-tilt compensated bearing of the device (North: logo mark)
+    // quat = accelmagiq.multiply(quat, accelmagiq.quat(0, 0.7, 0.7, 0))
+    // // RAW --> TILT: calculates tilt compensated bearing of the device (North: back side)
+    // quat = accelmagiq.multiply(quat, accelmagiq.quat(-0.5, 0.5, 0.5, 0.5))
 
     // logging - EulerAngles
     rpy = accelmagiq.rpyFromQuat(quat)

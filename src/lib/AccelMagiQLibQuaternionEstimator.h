@@ -1,7 +1,7 @@
 #ifndef ACCELMAGIQLIB_QUATERNIONESTIMATOR_H
 #define ACCELMAGIQLIB_QUATERNIONESTIMATOR_H
 
-#include "AccelMagiQLibLowPassFilter.h"
+#include "AccelMagiQLibCoordinateSpaceFilter.h"
 
 namespace accelmagiqlib
 {
@@ -21,7 +21,8 @@ namespace accelmagiqlib
          *
          * @param alpha The alpha value for the low pass filters. Default is 0.8.
          */
-        QuaternionEstimator(const double alpha = LowPassFilter::DEFAULT_ALPHA);
+        QuaternionEstimator(const double alpha = CoordinateSpaceFilter::DEFAULT_ALPHA)
+            : currentMethod(0) {}
 
         // Getters for quaternion components
         /**
@@ -90,6 +91,16 @@ namespace accelmagiqlib
         void setEstimateMethod(const int method);
 
         /**
+         * @brief Sets the coordinate system for the filter.
+         *
+         * @param system The coordinate system to use:
+         *               - COORDINATE_SYSTEM_BASIC: 0
+         *               - COORDINATE_SYSTEM_TILT: 1
+         *               - COORDINATE_SYSTEM_RAW: 2
+         */
+        void setCoordinateSystem(const int system);
+
+        /**
          * @brief Perform the quaternion estimation
          *
          * This function calculates the quaternion based on the current sensor data and the selected estimation method.
@@ -111,24 +122,10 @@ namespace accelmagiqlib
         int currentMethod; /**< The currently selected method identifier to use for estimation: 0-FAMC, 1-SIMPLE*/
 
         // Acceleration filter
-        LowPassFilter filterAx; /**< Low pass filter for the X component of the accelerometer */
-        LowPassFilter filterAy; /**< Low pass filter for the Y component of the accelerometer */
-        LowPassFilter filterAz; /**< Low pass filter for the Z component of the accelerometer */
+        CoordinateSpaceFilter filterAccel;
 
         // Magnetic force filter
-        LowPassFilter filterMx; /**< Low pass filter for the X component of the magnetometer */
-        LowPassFilter filterMy; /**< Low pass filter for the Y component of the magnetometer */
-        LowPassFilter filterMz; /**< Low pass filter for the Z component of the magnetometer */
-
-        // Acceleration (normalized)
-        double ax = 0.0; /**< Normalized X component of the acceleration */
-        double ay = 0.0; /**< Normalized Y component of the acceleration */
-        double az = 1.0; /**< Normalized Z component of the acceleration */
-
-        // Magnetic force (normalized)
-        double mx = 0.0; /**< Normalized X component of the magnetic force */
-        double my = 0.0; /**< Normalized Y component of the magnetic force */
-        double mz = 1.0; /**< Normalized Z component of the magnetic force */
+        CoordinateSpaceFilter filterMagne;
 
         // Quaternion (normalized)
         double qw = 1.0; /**< W component of the quaternion */

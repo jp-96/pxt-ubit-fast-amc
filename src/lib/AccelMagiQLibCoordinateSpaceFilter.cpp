@@ -3,7 +3,7 @@
 namespace accelmagiqlib
 {
 
-    void CoordinateSpaceFilter::setCoordinateSystem(int system)
+    void CoordinateSpaceFilter::setCoordinateSystem(const int system)
     {
         currentSystem = system;
     }
@@ -35,12 +35,12 @@ namespace accelmagiqlib
         return rawZ;
     }
 
-    void CoordinateSpaceFilter::update(double newX, double newY, double newZ)
+    void CoordinateSpaceFilter::update(const double x, const double y, const double z)
     {
         // Use the inline low-pass filter to update the raw values
-        prevX = lowPassFilter(newX, prevX, alphaX, oneMinusAlphaX);
-        prevY = lowPassFilter(newY, prevY, alphaY, oneMinusAlphaY);
-        prevZ = lowPassFilter(newZ, prevZ, alphaZ, oneMinusAlphaZ);
+        prevX = lowPassFilter(x, prevX, alphaX, oneMinusAlphaX);
+        prevY = lowPassFilter(y, prevY, alphaY, oneMinusAlphaY);
+        prevZ = lowPassFilter(z, prevZ, alphaZ, oneMinusAlphaZ);
         double norm = std::sqrt(prevX * prevX + prevY * prevY + prevZ * prevZ);
         if (0.0 < norm)
         {
@@ -50,7 +50,7 @@ namespace accelmagiqlib
         }
     }
 
-    void CoordinateSpaceFilter::setAlpha(double alpha)
+    void CoordinateSpaceFilter::setAlpha(const double alpha)
     {
         alphaX = alpha;
         oneMinusAlphaX = 1.0 - alpha;
