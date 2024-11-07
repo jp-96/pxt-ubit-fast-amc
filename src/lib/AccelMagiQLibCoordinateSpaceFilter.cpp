@@ -8,7 +8,7 @@ namespace accelmagiqlib
         currentSystem = system;
     }
 
-    double CoordinateSpaceFilter::getX() const
+    double CoordinateSpaceFilter::getCoordX() const
     {
         if (currentSystem == COORDINATE_SYSTEM_BASIC)
             return rawY;
@@ -17,7 +17,7 @@ namespace accelmagiqlib
         return rawX;
     }
 
-    double CoordinateSpaceFilter::getY() const
+    double CoordinateSpaceFilter::getCoordY() const
     {
         if (currentSystem == COORDINATE_SYSTEM_BASIC)
             return rawX;
@@ -26,7 +26,7 @@ namespace accelmagiqlib
         return rawY;
     }
 
-    double CoordinateSpaceFilter::getZ() const
+    double CoordinateSpaceFilter::getCoordZ() const
     {
         if (currentSystem == COORDINATE_SYSTEM_BASIC)
             return -rawZ;

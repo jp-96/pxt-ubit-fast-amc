@@ -76,12 +76,6 @@
   "accelmagiq.setAlpha|param|alpha": "The new alpha value (between 0.0 and 1.0). Default is 0.8.",
   "accelmagiq.setCoordinateSystem": "Sets the coordinate system.",
   "accelmagiq.setEstimateMethod": "Sets the estimation method.",
-  "accelmagiq.updateAcc": "Updates the acceleration values.",
-  "accelmagiq.updateAcc|param|x": "X-axis acceleration",
-  "accelmagiq.updateAcc|param|y": "Y-axis acceleration",
-  "accelmagiq.updateAcc|param|z": "Z-axis acceleration",
-  "accelmagiq.updateMag": "Updates the magnetic force values.",
-  "accelmagiq.updateMag|param|x": "X-axis magnetic force",
-  "accelmagiq.updateMag|param|y": "Y-axis magnetic force",
-  "accelmagiq.updateMag|param|z": "Z-axis magnetic force"
+  "accelmagiq.startSampling": "Start sampling.\n@returns An array containing the quaternion components [w, x, y, z].",
+  "accelmagiq.stopSampling": "Stop sampling."
 }

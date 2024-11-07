@@ -82,28 +82,6 @@ namespace accelmagiqlib
         void magnetometerUpdateHandler(MicroBitEvent e);
 
     public:
-        // Update functions
-        /**
-         * @brief Update the accelerometer data
-         *
-         * This function updates the internal state of the accelerometer filters with new data.
-         *
-         * @param x The X component of the accelerometer data
-         * @param y The Y component of the accelerometer data
-         * @param z The Z component of the accelerometer data
-         */
-        void updateAccelerometerData(const double x, const double y, const double z);
-
-        /**
-         * @brief Update the magnetometer data
-         *
-         * This function updates the internal state of the magnetometer filters with new data.
-         *
-         * @param x The X component of the magnetometer data
-         * @param y The Y component of the magnetometer data
-         * @param z The Z component of the magnetometer data
-         */
-        void updateMagnetometerData(const double x, const double y, const double z);
 
         /**
          * @brief Set the method used for quaternion estimation

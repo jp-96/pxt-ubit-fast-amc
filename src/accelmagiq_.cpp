@@ -36,15 +36,15 @@ namespace accelmagiq_
     }
 
     //%
-    void updateAcceleration(TNumber accX, TNumber accY, TNumber accZ)
+    void startSampling()
     {
-        instance().updateAccelerometerData(toDouble(accX), toDouble(accY), toDouble(accZ));
+        instance().resumeSampling();
     }
 
     //%
-    void updateMagneticForce(TNumber magX, TNumber magY, TNumber magZ)
+    void stopSampling()
     {
-        instance().updateMagnetometerData(toDouble(magX), toDouble(magY), toDouble(magZ));
+        instance().pauseSampling();
     }
 
     //%

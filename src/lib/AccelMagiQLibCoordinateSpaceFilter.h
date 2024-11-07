@@ -75,21 +75,21 @@ namespace accelmagiqlib
          *
          * @return The X coordinate value.
          */
-        double getX() const;
+        double getCoordX() const;
 
         /**
          * Gets the Y coordinate based on the current coordinate system.
          *
          * @return The Y coordinate value.
          */
-        double getY() const;
+        double getCoordY() const;
 
         /**
          * Gets the Z coordinate based on the current coordinate system.
          *
          * @return The Z coordinate value.
          */
-        double getZ() const;
+        double getCoordZ() const;
 
         /**
          * Updates the coordinate values with new data.

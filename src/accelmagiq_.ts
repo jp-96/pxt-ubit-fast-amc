@@ -5,11 +5,6 @@ namespace accelmagiq_ {
     let rawAy = 0.0;
     let rawAz = 0.0;
 
-    // Magnetic force (normalized) for simulator
-    let rawMx = 1.0;
-    let rawMy = 0.0;
-    let rawMz = 0.0;
-
     // Quaternion for simulator
     let q_ = [1.0, 0.0, 0.0, 0.0];
 
@@ -40,9 +35,27 @@ namespace accelmagiq_ {
         method_ = method;
     }
 
-    //% shim=accelmagiq_::updateAcceleration
-    export function updateAcceleration(x: number, y: number, z: number): void {
+    let sampling_ = false;
+
+    //% shim=accelmagiq_::startSampling
+    export function startSampling(): void {
         // for simulator
+        sampling_ = true;
+    }
+
+
+    //% shim=accelmagiq_::startSampling
+    export function stopSampling(): void {
+        // for simulator
+        sampling_ = false;
+    }
+
+    function readAcceleration(): void {
+        // for simulator
+        const x = input.acceleration(Dimension.X);
+        const y = input.acceleration(Dimension.Y);
+        const z = input.acceleration(Dimension.Z);
+
         let norm = Math.sqrt(x * x + y * y + z * z)
         if (0 < norm) {
             norm = 1 / norm;
@@ -52,21 +65,12 @@ namespace accelmagiq_ {
         }
     }
 
-    //% shim=accelmagiq_::updateMagneticForce
-    export function updateMagneticForce(x: number, y: number, z: number): void {
-        // for simulator
-        let norm = Math.sqrt(x * x + y * y + z * z)
-        if (0 < norm) {
-            norm = 1 / norm;
-            rawMx = x * norm;
-            rawMy = y * norm;
-            rawMz = z * norm;
-        }
-    }
-
     //% shim=accelmagiq_::estimate
     export function estimate(): void {
         // for simulator
+        if (sampling_) {
+            readAcceleration();
+        }
         const ax = rawAy;
         const ay = rawAx;
         const az = -rawAz;

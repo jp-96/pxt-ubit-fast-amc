@@ -3,51 +3,26 @@
 
 using namespace accelmagiqlib;
 
-/**
- * Get the W component of the quaternion
- *
- * @return The W component of the quaternion
- */
 double QuaternionEstimator::getW() const
 {
     return qw;
 }
 
-/**
- * Get the X component of the quaternion
- *
- * @return The X component of the quaternion
- */
 double QuaternionEstimator::getX() const
 {
     return qx;
 }
 
-/**
- * Get the Y component of the quaternion
- *
- * @return The Y component of the quaternion
- */
 double QuaternionEstimator::getY() const
 {
     return qy;
 }
 
-/**
- * Get the Z component of the quaternion
- *
- * @return The Z component of the quaternion
- */
 double QuaternionEstimator::getZ() const
 {
     return qz;
 }
 
-/**
- * Set the alpha value for the low pass filters
- *
- * @param alpha The new alpha value. Should be in the range of 0.0 to 1.0.
- */
 void QuaternionEstimator::setLowPassFilterAlpha(const double alpha)
 {
     filterAccel.setAlpha(alpha);
@@ -94,7 +69,7 @@ void QuaternionEstimator::accelerometerUpdateHandler(MicroBitEvent e)
     double x = uBit.accelerometer.getX();
     double y = uBit.accelerometer.getY();
     double z = uBit.accelerometer.getZ();
-    updateAccelerometerData(x, y, z);
+    filterAccel.update(x, y, z);
 }
 
 void QuaternionEstimator::magnetometerUpdateHandler(MicroBitEvent e)
@@ -103,58 +78,20 @@ void QuaternionEstimator::magnetometerUpdateHandler(MicroBitEvent e)
     double x = uBit.compass.getX();
     double y = uBit.compass.getY();
     double z = uBit.compass.getZ();
-    updateMagnetometerData(x, y, z);
-}
-
-/**
- * Update the accelerometer data
- *
- * This function updates and normalizes the accelerometer data.
- *
- * @param x The X component of the accelerometer data
- * @param y The Y component of the accelerometer data
- * @param z The Z component of the accelerometer data
- */
-void QuaternionEstimator::updateAccelerometerData(const double x, const double y, const double z)
-{
-    // Update and normalize accelerometer data
-    filterAccel.update(x, y, z);
-}
-
-/**
- * Update the magnetometer data
- *
- * This function updates and normalizes the magnetometer data.
- *
- * @param x The X component of the magnetometer data
- * @param y The Y component of the magnetometer data
- * @param z The Z component of the magnetometer data
- */
-void QuaternionEstimator::updateMagnetometerData(const double x, const double y, const double z)
-{
-    // Update and normalize magnetometer data
     filterMagne.update(x, y, z);
 }
 
-/**
- * Set the method used for quaternion estimation
- *
- * @param method The method identifier to use for estimation
- */
 void QuaternionEstimator::setEstimateMethod(const int method)
 {
     currentMethod = method;
 }
+
 void QuaternionEstimator::setCoordinateSystem(const int system)
 {
     filterAccel.setCoordinateSystem(system);
     filterMagne.setCoordinateSystem(system);
 }
-/**
- * Perform the quaternion estimation
- *
- * This function calculates the quaternion based on the current sensor data and the selected estimation method.
- */
+
 void QuaternionEstimator::estimate()
 {
     if (ESTIMATION_METHOD_FAMC == currentMethod)
@@ -167,17 +104,14 @@ void QuaternionEstimator::estimate()
     }
 }
 
-/**
- * Estimate the quaternion using the Fast Accelerometer-Magnetometer Combination (FAMC) algorithm
- */
 void QuaternionEstimator::estimateFamc()
 {
-    const double ax = filterAccel.getX();
-    const double ay = filterAccel.getY();
-    const double az = filterAccel.getZ();
-    const double mx = filterMagne.getX();
-    const double my = filterMagne.getY();
-    const double mz = filterMagne.getZ();
+    const double ax = filterAccel.getCoordX();
+    const double ay = filterAccel.getCoordY();
+    const double az = filterAccel.getCoordZ();
+    const double mx = filterMagne.getCoordX();
+    const double my = filterMagne.getCoordY();
+    const double mz = filterMagne.getCoordZ();
 
     // ---------------------------------------------------------------------------------------------
     // A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer
@@ -246,14 +180,11 @@ void QuaternionEstimator::estimateFamc()
     }
 }
 
-/**
- * Estimate the quaternion using a simple method
- */
 void QuaternionEstimator::estimateSimple()
 {
-    const double ax = filterAccel.getX();
-    const double ay = filterAccel.getY();
-    const double az = filterAccel.getZ();
+    const double ax = filterAccel.getCoordX();
+    const double ay = filterAccel.getCoordY();
+    const double az = filterAccel.getCoordZ();
 
     // Accelerration Only
     double w = std::sqrt((az + 1.0) / 2.0);

@@ -52,31 +52,25 @@ namespace accelmagiq {
     }
 
     /**
-     * Updates the acceleration values.
-     * @param x X-axis acceleration
-     * @param y Y-axis acceleration
-     * @param z Z-axis acceleration
+     * Start sampling.
+     * @returns An array containing the quaternion components [w, x, y, z].
      */
-    //% block="Update Acceleration X %x Y %y Z %z"
+    //% block="Start sampling"
     //% group="Sensor"
     //% weight=143
-    export function updateAcc(x: number, y: number, z: number): void {
-        accelmagiq_.updateAcceleration(x, y, z);
+    export function startSampling(): void {
+        accelmagiq_.startSampling();
     }
 
     /**
-     * Updates the magnetic force values.
-     * @param x X-axis magnetic force
-     * @param y Y-axis magnetic force
-     * @param z Z-axis magnetic force
+     * Stop sampling.
      */
-    //% block="Update Magnetic force X %x Y %y Z %z"
+    //% block="Stop Sampling"
     //% group="Sensor"
     //% weight=142
-    export function updateMag(x: number, y: number, z: number): void {
-        accelmagiq_.updateMagneticForce(x, y, z);
+    export function stopSampling(): void {
+        accelmagiq_.stopSampling();
     }
-
     /**
      * Estimates the current quaternion.
      * @returns An array containing the quaternion components [w, x, y, z].
