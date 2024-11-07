@@ -33,6 +33,9 @@ namespace accelmagiq {
         SIMPLE = 1
     }
 
+    /**
+     * Define coordinate system enum
+     */
     export enum CoordinateSystem {
         /**
          * BASIC: a non-tilt compensated bearing of the device (North: logo mark)
@@ -45,36 +48,21 @@ namespace accelmagiq {
         //% block="TILT"
         TILT = 1,
         /**
-         * RAW (North: A-button, upside-down)
+         * RAW: a raw coordinate system (North: A-button, upside-down)
          */
         //% block="RAW"
         RAW = 2,
     }
 
     /**
-     * Updates the acceleration values.
-     * @param x X-axis acceleration
-     * @param y Y-axis acceleration
-     * @param z Z-axis acceleration
+     * Start sampling.
+     * @returns An array containing the quaternion components [w, x, y, z].
      */
-    //% block="Update Acceleration X %x Y %y Z %z"
+    //% block="Start sampling"
     //% group="Sensor"
-    //% weight=143
-    export function updateAcc(x: number, y: number, z: number): void {
-        accelmagiq_.updateAcceleration(x, y, z);
-    }
-
-    /**
-     * Updates the magnetic force values.
-     * @param x X-axis magnetic force
-     * @param y Y-axis magnetic force
-     * @param z Z-axis magnetic force
-     */
-    //% block="Update Magnetic force X %x Y %y Z %z"
-    //% group="Sensor"
-    //% weight=142
-    export function updateMag(x: number, y: number, z: number): void {
-        accelmagiq_.updateMagneticForce(x, y, z);
+    //% weight=145
+    export function startSampling(): void {
+        accelmagiq_.startSampling();
     }
 
     /**
@@ -83,10 +71,22 @@ namespace accelmagiq {
      */
     //% block="Estimate Quaternion"
     //% group="Sensor"
-    //% weight=141
+    //% weight=144
     export function estimate(): number[] {
         accelmagiq_.estimate();
         return [accelmagiq_.getW(), accelmagiq_.getX(), accelmagiq_.getY(), accelmagiq_.getZ()];
+    }
+
+    /**
+     * Sets the coordinate system.
+     */
+    //% block="set coordinate system %system"
+    //% group="Sensor"
+    //% weight=143
+    //% method.defl=0
+    //% advanced=true
+    export function setCoordinateSystem(system: CoordinateSystem) {
+        accelmagiq_.setCoordinateSystem(system);
     }
 
     /**
@@ -95,7 +95,7 @@ namespace accelmagiq {
      */
     //% block="Set Alpha %alpha"
     //% group="Sensor"
-    //% weight=140
+    //% weight=142
     //% alpha.defl=0.8
     //% advanced=true
     export function setAlpha(alpha: number): void {
@@ -103,27 +103,26 @@ namespace accelmagiq {
     }
 
     /**
+     * Stop sampling.
+     */
+    //% block="Stop Sampling"
+    //% group="Sensor"
+    //% weight=141
+    //% advanced=true
+    export function stopSampling(): void {
+        accelmagiq_.stopSampling();
+    }
+
+    /**
      * Sets the estimation method.
      */
     //% block="set estimate method %method"
     //% group="Sensor"
-    //% weight=131
+    //% weight=140
     //% method.defl=0
     //% advanced=true
     export function setEstimateMethod(method: EstimationMethod): void {
         accelmagiq_.setEstimateMethod(method);
     }
-
-    /**
-     * Sets the coordinate system.
-     */
-    //% block="set coordinate system %system"
-    //% group="Sensor"
-    //% weight=130
-    //% method.defl=0
-    //% advanced=true
-    export function setCoordinateSystem(system: CoordinateSystem) {
-        accelmagiq_.setCoordinateSystem(system);
-    }
-
+    
 }

@@ -13,7 +13,7 @@
         "src/accelmagiq_.cpp",
         "src/accelmagiq_.ts",
         "src/accelmagiq.ts",
-        "src/accelmagiq.ex.ts",
+        "src/accelmagiq.math.ts",
         "enums.d.ts",
         "shims.d.ts",
         "README.md"
