@@ -15,8 +15,10 @@ input.onButtonPressed(Button.A, function () {
     updateAlpha()
 })
 input.onButtonPressed(Button.AB, function () {
+    accelmagiq.stopSampling()
     input.calibrateCompass()
     updateAlpha()
+    accelmagiq.startSampling()
 })
 input.onButtonPressed(Button.B, function () {
     alpha += 1

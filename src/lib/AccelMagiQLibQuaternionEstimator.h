@@ -22,11 +22,7 @@ namespace accelmagiqlib
         /**
          * Constructor
          */
-        QuaternionEstimator()
-            : currentMethod(ESTIMATION_METHOD_FAMC), isSampling(false)
-        {
-            resumeSampling();
-        }
+        QuaternionEstimator() : currentMethod(ESTIMATION_METHOD_FAMC), isSampling(false) {}
 
         // Getters for quaternion components
         /**
@@ -82,7 +78,6 @@ namespace accelmagiqlib
         void magnetometerUpdateHandler(MicroBitEvent e);
 
     public:
-
         /**
          * @brief Set the method used for quaternion estimation
          *
