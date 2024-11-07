@@ -1,17 +1,19 @@
 {
     "name": "pxt-accelmagiq",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "A Simplified Analytic Attitude Determination Algorithm Using Accelerometer and Magnetometer on micro:bit",
     "dependencies": {
         "core": "*"
     },
     "files": [
-        "src/lib/LowPassFilter.h",
-        "src/lib/LowPassFilter.cpp",
-        "src/accelmagiqfamc_.ts",
-        "src/accelmagiqfamc_.cpp",
-        "src/accelmagiq.estimate.ts",
+        "src/lib/AccelMagiQLibCoordinateSpaceFilter.h",
+        "src/lib/AccelMagiQLibCoordinateSpaceFilter.cpp",
+        "src/lib/AccelMagiQLibQuaternionEstimator.h",
+        "src/lib/AccelMagiQLibQuaternionEstimator.cpp",
+        "src/accelmagiq_.cpp",
+        "src/accelmagiq_.ts",
         "src/accelmagiq.ts",
+        "src/accelmagiq.math.ts",
         "enums.d.ts",
         "shims.d.ts",
         "README.md"
